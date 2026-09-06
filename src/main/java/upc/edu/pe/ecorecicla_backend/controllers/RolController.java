@@ -54,4 +54,37 @@ public class RolController {
                 .created(location)
                 .body(responseDTO);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<RolDTOInsert> buscarPorId(
+            @PathVariable Long id) {
+
+        Rol rol = rS.searchId(id);
+
+        RolDTOInsert dto =
+                modelMapper.map(rol, RolDTOInsert.class);
+
+        return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(
+            @PathVariable Long id) {
+
+        rS.delete(id);
+
+        return ResponseEntity.noContent().build();
+    }
+    @PutMapping
+    public ResponseEntity<RolDTOInsert> actualizar(
+            @Valid @RequestBody RolDTOInsert dto) {
+
+        Rol rol = modelMapper.map(dto, Rol.class);
+
+        rS.update(rol);
+
+        RolDTOInsert responseDTO =
+                modelMapper.map(rol, RolDTOInsert.class);
+
+        return ResponseEntity.ok(responseDTO);
+    }
 }
