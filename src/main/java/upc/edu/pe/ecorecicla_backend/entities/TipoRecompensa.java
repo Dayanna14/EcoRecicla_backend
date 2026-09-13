@@ -3,7 +3,7 @@ package upc.edu.pe.ecorecicla_backend.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "tipoRecompensa")
+@Table(name = "tipoRecompensas")
 public class TipoRecompensa {
 
     @Id
