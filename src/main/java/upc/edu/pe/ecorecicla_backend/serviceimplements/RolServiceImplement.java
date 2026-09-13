@@ -49,4 +49,10 @@ public class RolServiceImplement implements IRolService {
                 "Rol no encontrado"));
         rR.save(r);
     }
+
+    @Override
+    public List<Rol> buscarPorNombre(String nombre) {
+        return rR.findByNombreContainingIgnoreCase(nombre);
+    }
+
 }

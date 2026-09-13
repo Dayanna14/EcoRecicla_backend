@@ -87,4 +87,15 @@ public class RolController {
 
         return ResponseEntity.ok(responseDTO);
     }
+    @GetMapping("/buscar")
+    public ResponseEntity<List<RolDTOList>> buscarPorNombre(
+            @RequestParam String nombre) {
+
+        List<RolDTOList> lista = rS.buscarPorNombre(nombre)
+                .stream()
+                .map(r -> modelMapper.map(r, RolDTOList.class))
+                .toList();
+
+        return ResponseEntity.ok(lista);
+    }
 }

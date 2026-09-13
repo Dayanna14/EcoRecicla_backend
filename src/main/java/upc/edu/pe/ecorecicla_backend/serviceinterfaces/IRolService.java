@@ -10,4 +10,5 @@ public interface IRolService {
     Rol searchId(Long id);
     void delete(Long id);
     void update(Rol r);
+    List<Rol> buscarPorNombre(String nombre);
 }
