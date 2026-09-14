@@ -7,6 +7,7 @@ import upc.edu.pe.ecorecicla_backend.repositories.IEntregaRepository;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IEntregaService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EntregaServiceImplement implements IEntregaService {
@@ -33,6 +34,20 @@ public class EntregaServiceImplement implements IEntregaService {
                 new ResourceNotFoundException("No se encontró la entrega con el id: " + id)
         );
         eR.deleteById(id);
+    }
+
+    @Override
+    public Optional<Entrega> listId(Long id) {
+        return eR.findById(id);
+    }
+
+    @Override
+    public void update(Entrega entrega) {
+        // Validamos que la entrega a actualizar existe
+        eR.findById(entrega.getIdEntrega()).orElseThrow(() ->
+                new ResourceNotFoundException("No se encontró la entrega con el id: " + entrega.getIdEntrega())
+        );
+        eR.save(entrega);
     }
 
 }
