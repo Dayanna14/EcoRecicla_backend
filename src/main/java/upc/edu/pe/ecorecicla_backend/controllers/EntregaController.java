@@ -82,4 +82,10 @@ public class EntregaController {
         return ResponseEntity.created(location).body(responseDTO);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        eS.delete(id);
+        return ResponseEntity.noContent().build(); // Retornamos HTTP 204
+    }
+
 }

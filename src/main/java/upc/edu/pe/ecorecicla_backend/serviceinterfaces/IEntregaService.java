@@ -9,6 +9,6 @@ public interface IEntregaService {
 
     public void insert(Entrega entrega);
     public List<Entrega> list();
-
+    public void delete(Long id);
 
 }
