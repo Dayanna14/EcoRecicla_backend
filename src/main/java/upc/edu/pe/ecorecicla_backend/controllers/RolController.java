@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.RolDTOInsert;
 import upc.edu.pe.ecorecicla_backend.dtos.RolDTOList;
+import upc.edu.pe.ecorecicla_backend.dtos.RolMasUtilizadoDTO;
 import upc.edu.pe.ecorecicla_backend.entities.Rol;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IRolService;
 
@@ -98,4 +99,25 @@ public class RolController {
 
         return ResponseEntity.ok(lista);
     }
+
+    @GetMapping("/rol-mas-utilizado")
+    public ResponseEntity<List<RolMasUtilizadoDTO>> rolMasUtilizado() {
+
+        List<RolMasUtilizadoDTO> lista =
+                rS.rolMasUtilizado()
+                        .stream()
+                        .map(item -> {
+                            RolMasUtilizadoDTO dto =
+                                    new RolMasUtilizadoDTO();
+
+                            dto.setNombreRol((String) item[0]);
+                            dto.setCantidadUsuarios(
+                                    ((Number) item[1]).intValue());
+
+                            return dto;
+                        }).toList();
+
+        return ResponseEntity.ok(lista);
+    }
+
 }

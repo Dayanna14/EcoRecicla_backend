@@ -10,5 +10,7 @@ public interface IRolService {
     Rol searchId(Long id);
     void delete(Long id);
     void update(Rol r);
+    // querys
     List<Rol> buscarPorNombre(String nombre);
+    List<Object[]> rolMasUtilizado();
 }

@@ -52,7 +52,13 @@ public class RolServiceImplement implements IRolService {
 
     @Override
     public List<Rol> buscarPorNombre(String nombre) {
+
         return rR.findByNombreContainingIgnoreCase(nombre);
+    }
+
+    @Override
+    public List<Object[]> rolMasUtilizado() {
+        return rR.rolMasUtilizado();
     }
 
 }
