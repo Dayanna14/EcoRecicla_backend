@@ -11,4 +11,5 @@ public interface ICentroAcopioService {
     void delete(Long id);
     void update(CentroAcopio c);
     List<CentroAcopio> buscarPorEstado(Boolean estado);
+    List<Object[]> centrosConMasPuntos();
 }

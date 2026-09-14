@@ -52,4 +52,9 @@ public class CentroAcopioServiceImplement implements ICentroAcopioService {
     public List<CentroAcopio> buscarPorEstado(Boolean estado) {
         return cR.findByEstado(estado);
     }
+
+    @Override
+    public List<Object[]> centrosConMasPuntos() {
+        return cR.centrosConMasPuntos();
+    }
 }

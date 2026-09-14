@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.CentroAcopioDTOInsert;
 import upc.edu.pe.ecorecicla_backend.dtos.CentroAcopioDTOList;
+import upc.edu.pe.ecorecicla_backend.dtos.CentroAcopioPuntosDTO;
 import upc.edu.pe.ecorecicla_backend.entities.CentroAcopio;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.ICentroAcopioService;
 
@@ -110,6 +111,30 @@ public class CentroAcopioController {
 
         return ResponseEntity.ok(lista);
     }
+
+    @GetMapping("/centros-mas-puntos")
+    public ResponseEntity<List<CentroAcopioPuntosDTO>>
+    centrosConMasPuntos() {
+
+        List<CentroAcopioPuntosDTO> lista =
+                cS.centrosConMasPuntos()
+                        .stream()
+                        .map(item -> {
+                            CentroAcopioPuntosDTO dto =
+                                    new CentroAcopioPuntosDTO();
+
+                            dto.setNombreCentro((String) item[0]);
+                            dto.setTotalPuntos(
+                                    ((Number) item[1]).intValue()
+                            );
+
+                            return dto;
+                        })
+                        .toList();
+
+        return ResponseEntity.ok(lista);
+    }
+
 }
 
 

@@ -16,16 +16,17 @@ public class Entrega {
 
 
     @ManyToOne
-    @JoinColumn(name = "idMaterial")
+    @JoinColumn(name = "id_material")
     private Material material;
 
     @ManyToOne
-    @JoinColumn(name = "idCentroAcopio")
-    private CentroAcopio centroAcopio;
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "idUsuario")
-    private Usuario usuario;
+    @JoinColumn(name = "id_centro")
+    private CentroAcopio centroAcopio;
+    
 
     public Entrega() {}
 
