@@ -57,7 +57,7 @@ public class EntregaController {
         entrega.setMaterial(material);
 
         CentroAcopio centroAcopio = new CentroAcopio();
-        centroAcopio.setIdCentroAcopio(dto.getIdCentroAcopio());
+        centroAcopio.setIdCentro(dto.getIdCentroAcopio());
         entrega.setCentroAcopio(centroAcopio);
 
         Usuario usuario = new Usuario();

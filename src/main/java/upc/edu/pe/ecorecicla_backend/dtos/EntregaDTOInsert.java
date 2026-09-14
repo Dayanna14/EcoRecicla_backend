@@ -14,6 +14,7 @@ public class EntregaDTOInsert {
     private Double cantidadKg;
 
     private int puntosGenerados;
+
     private LocalDateTime fecha;
 
     @NotNull(message = "El idMaterial es obligatorio")
