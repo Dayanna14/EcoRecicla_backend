@@ -21,7 +21,7 @@ public class Entrega {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario")
-    private Usuario usuario;
+    private Usuarios usuario;
 
     @ManyToOne
     @JoinColumn(name = "id_centro")
@@ -30,7 +30,7 @@ public class Entrega {
 
     public Entrega() {}
 
-    public Entrega(Long idEntrega, Double cantidadKg, int puntosGeneredos, LocalDateTime fecha, Material material, CentroAcopio centroAcopio, Usuario usuario) {
+    public Entrega(Long idEntrega, Double cantidadKg, int puntosGeneredos, LocalDateTime fecha, Material material, CentroAcopio centroAcopio, Usuarios usuario) {
         this.idEntrega = idEntrega;
         this.cantidadKg = cantidadKg;
         this.puntosGeneredos = puntosGeneredos;
@@ -88,11 +88,11 @@ public class Entrega {
         this.centroAcopio = centroAcopio;
     }
 
-    public Usuario getUsuario() {
+    public Usuarios getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(Usuarios usuario) {
         this.usuario = usuario;
     }
 }

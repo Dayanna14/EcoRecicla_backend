@@ -1,5 +1,6 @@
 package upc.edu.pe.ecorecicla_backend.serviceimplements;
 
+import org.springframework.stereotype.Service;
 import upc.edu.pe.ecorecicla_backend.entities.Usuarios;
 import upc.edu.pe.ecorecicla_backend.repositories.IUsuarioRepository;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IUsuarioService;
@@ -7,6 +8,7 @@ import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IUsuarioService;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class UsuariosServiceImplement implements IUsuarioService {
 
     private final IUsuarioRepository uR;
@@ -38,5 +40,10 @@ public class UsuariosServiceImplement implements IUsuarioService {
     @Override
     public Optional<Usuarios> listId(Long id) {
         return uR.findById(id);
+    }
+
+    @Override
+    public List<Object[]> usuariosPorRol() {
+        return uR.usuariosPorRol();
     }
 }

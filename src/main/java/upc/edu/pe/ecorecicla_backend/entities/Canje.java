@@ -18,7 +18,7 @@ public class Canje {
 
     @ManyToOne
     @JoinColumn(name = "idUsuario")
-    private Usuario usuario;
+    private Usuarios usuario;
 
 
     public Canje() {}
@@ -39,11 +39,11 @@ public class Canje {
         this.recompensa = recompensa;
     }
 
-    public Usuario getUsuario() {
+    public Usuarios getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(Usuarios usuario) {
         this.usuario = usuario;
     }
 }

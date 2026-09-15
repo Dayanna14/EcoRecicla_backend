@@ -1,24 +1,13 @@
-package upc.edu.pe.ecorecicla_backend.entities;
+package upc.edu.pe.ecorecicla_backend.dtos;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "usuarios")
-public class Usuarios {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UsuarioListDTO {
     private Long id_usuario;
-    @ManyToOne
-    @JoinColumn(name = "idRol")
-    private Rol rol;
-    @Column(name = "nombre",length = 35,nullable = false)
+    private Long idRol;
     private String nombre;
-    @Column(name = "email",length = 70,nullable = false)
     private String email;
-    @Column(name = "contrasenia",length = 70,nullable = false )
     private String contrasenia;
 
-    public Usuarios() {
+    public UsuarioListDTO() {
     }
 
     public Long getId_usuario() {
@@ -29,12 +18,12 @@ public class Usuarios {
         this.id_usuario = id_usuario;
     }
 
-    public Rol getRol() {
-        return rol;
+    public Long getIdRol() {
+        return idRol;
     }
 
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public void setIdRol(Long idRol) {
+        this.idRol = idRol;
     }
 
     public String getNombre() {

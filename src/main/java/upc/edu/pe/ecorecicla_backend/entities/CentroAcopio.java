@@ -26,12 +26,12 @@ public class CentroAcopio {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario")
-    private Usuario usuario;
+    private Usuarios usuario;
 
     public CentroAcopio() {
     }
 
-    public CentroAcopio(Long idCentro, String nombre, Double latitud, Double longitud, String horario, Boolean estado, Usuario usuario) {
+    public CentroAcopio(Long idCentro, String nombre, Double latitud, Double longitud, String horario, Boolean estado, Usuarios usuario) {
         this.idCentro = idCentro;
         this.nombre = nombre;
         this.latitud = latitud;
@@ -89,11 +89,11 @@ public class CentroAcopio {
         this.estado = estado;
     }
 
-    public Usuario getUsuario() {
+    public Usuarios getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(Usuarios usuario) {
         this.usuario = usuario;
     }
 }

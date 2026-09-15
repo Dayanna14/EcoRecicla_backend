@@ -10,7 +10,7 @@ import upc.edu.pe.ecorecicla_backend.dtos.EntregaDTOList;
 import upc.edu.pe.ecorecicla_backend.entities.CentroAcopio;
 import upc.edu.pe.ecorecicla_backend.entities.Entrega;
 import upc.edu.pe.ecorecicla_backend.entities.Material;
-import upc.edu.pe.ecorecicla_backend.entities.Usuario;
+import upc.edu.pe.ecorecicla_backend.entities.Usuarios;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IEntregaService;
 
 import java.net.URI;
@@ -60,8 +60,8 @@ public class EntregaController {
         centroAcopio.setIdCentro(dto.getIdCentroAcopio());
         entrega.setCentroAcopio(centroAcopio);
 
-        Usuario usuario = new Usuario();
-        usuario.setIdUsuario(dto.getIdUsuario());
+        Usuarios usuario = new Usuarios();
+        usuario.setId_usuario(dto.getIdUsuario());
         entrega.setUsuario(usuario);
 
         //Guardar en BD

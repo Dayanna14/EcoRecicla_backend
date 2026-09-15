@@ -1,18 +1,27 @@
 package upc.edu.pe.ecorecicla_backend.dtos;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class UsuariosDTO {
+public class UsuarioInsertDTO {
+
     private Long id_usuario;
-    @NotNull(message = "El id de rol es obligatorio.")
+
+    @NotNull(message = "El id del rol es obligatorio")
     private Long idRol;
-    @NotBlank(message = "Nombre de usuario obligatorio.")
+
+    @NotBlank(message = "El nombre de usuario es obligatorio")
     private String nombre;
-    @NotBlank(message = "Email obligatorio.")
+
+    @NotBlank(message = "El email es obligatorio")
     private String email;
-    @NotBlank(message = "Contraseña obligatoria.")
+
+    @NotBlank(message = "La contraseña es obligatoria")
     private String contrasenia;
+
+    public UsuarioInsertDTO() {
+    }
 
     public Long getId_usuario() {
         return id_usuario;
