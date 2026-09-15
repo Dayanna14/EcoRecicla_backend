@@ -13,7 +13,7 @@ public class EntregaDTOInsert {
     @Positive(message = "La cantidad debe ser mayor a 0")
     private Double cantidadKg;
 
-    private int puntosGenerados;
+    private int puntosGeneredos;
 
     private LocalDateTime fecha;
 
@@ -42,12 +42,12 @@ public class EntregaDTOInsert {
         this.cantidadKg = cantidadKg;
     }
 
-    public int getPuntosGenerados() {
-        return puntosGenerados;
+    public int getPuntosGeneredos() {
+        return puntosGeneredos;
     }
 
-    public void setPuntosGenerados(int puntosGenerados) {
-        this.puntosGenerados = puntosGenerados;
+    public void setPuntosGeneredos(int puntosGeneredos) {
+        this.puntosGeneredos = puntosGeneredos;
     }
 
     public LocalDateTime getFecha() {

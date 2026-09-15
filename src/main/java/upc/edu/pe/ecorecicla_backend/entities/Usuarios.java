@@ -11,6 +11,7 @@ public class Usuarios {
     @ManyToOne
     @JoinColumn(name = "idRol")
     private Rol rol;
+
     @Column(name = "nombre",length = 35,nullable = false)
     private String nombre;
     @Column(name = "email",length = 70,nullable = false)
