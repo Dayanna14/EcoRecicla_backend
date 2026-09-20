@@ -1,26 +1,17 @@
-package upc.edu.pe.ecorecicla_backend.entities;
+package upc.edu.pe.ecorecicla_backend.dtos;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "recompensas")
-public class Recompensa {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class RecompensaListDTO {
     private Long idRecompensa;
-    @ManyToOne
-    @JoinColumn(name = "idTipoRecompensa")
-    private TipoRecompensa tipoRecompensa;
-    @Column(name = "nombre",length = 50,nullable = false)
+    private Long idTipoRecompensa;
     private String nombre;
-    @Column(name = "costoPuntos",nullable = false)
     private int costoPuntos;
-    @Column(name = "estado",nullable = false)
     private boolean estado;
-    @Column(name = "imagenUrl",length = 500)
     private String imagenUrl;
 
-    public Recompensa() {
+    public RecompensaListDTO() {
     }
 
     public Long getIdRecompensa() {
@@ -31,12 +22,12 @@ public class Recompensa {
         this.idRecompensa = idRecompensa;
     }
 
-    public TipoRecompensa getTipoRecompensa() {
-        return tipoRecompensa;
+    public Long getIdTipoRecompensa() {
+        return idTipoRecompensa;
     }
 
-    public void setTipoRecompensa(TipoRecompensa tipoRecompensa) {
-        this.tipoRecompensa = tipoRecompensa;
+    public void setIdTipoRecompensa(Long idTipoRecompensa) {
+        this.idTipoRecompensa = idTipoRecompensa;
     }
 
     public String getNombre() {

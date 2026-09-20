@@ -14,6 +14,7 @@ public class UsuarioInsertDTO {
     @NotBlank(message = "El nombre de usuario es obligatorio")
     private String nombre;
 
+    @Email
     @NotBlank(message = "El email es obligatorio")
     private String email;
 
