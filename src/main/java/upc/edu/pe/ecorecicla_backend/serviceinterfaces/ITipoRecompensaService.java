@@ -10,4 +10,6 @@ public interface ITipoRecompensaService {
     void delete(Long id);
     TipoRecompensa listId(Long id);
     List<TipoRecompensa> list();
+    List<TipoRecompensa> buscarPorNombre(String nombre);
+    List<Object[]> buscarRecompensaPorEstado(Boolean estado);
 }

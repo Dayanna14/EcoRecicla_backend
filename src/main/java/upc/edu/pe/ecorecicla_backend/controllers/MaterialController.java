@@ -51,4 +51,13 @@ public class MaterialController {
 
         return ResponseEntity.created(location).body(responseDTO);
     }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<MaterialDTOList>> buscarPorNombre(@RequestParam String nombre) {
+        List<MaterialDTOList> resultado = mS.buscarPorNombre(nombre).stream()
+                .map(material -> modelMapper.map(material, MaterialDTOList.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(resultado);
+    }
 }

@@ -40,4 +40,14 @@ public class TipoRecompensaServiceImplement implements ITipoRecompensaService {
     public List<TipoRecompensa> list() {
         return tR.findAll();
     }
+
+    @Override
+    public List<TipoRecompensa> buscarPorNombre(String nombre) {
+        return tR.findByNombreTipoRecompensaContainingIgnoreCase(nombre);
+    }
+
+    @Override
+    public List<Object[]> buscarRecompensaPorEstado(Boolean estado) {
+        return tR.buscarRecompensaPorEstado(estado);
+    }
 }

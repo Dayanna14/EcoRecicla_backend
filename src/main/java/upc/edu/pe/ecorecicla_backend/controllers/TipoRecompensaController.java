@@ -12,7 +12,9 @@ import upc.edu.pe.ecorecicla_backend.entities.TipoRecompensa;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.ITipoRecompensaService;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -81,5 +83,34 @@ public class TipoRecompensaController {
         }
         tS.delete(id);
         return ResponseEntity.ok("Tipo de recompensa eliminado correctamente");
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<TipoRecompensaDTOList>> buscarPorNombre(@RequestParam String nombre) {
+        List<TipoRecompensaDTOList> resultado = tS.buscarPorNombre(nombre).stream()
+                .map(tipo -> modelMapper.map(tipo, TipoRecompensaDTOList.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/recompensas/estado")
+    public ResponseEntity<List<Map<String, Object>>> buscarRecompensaPorEstado(@RequestParam Boolean estado) {
+        List<Object[]> resultado = tS.buscarRecompensaPorEstado(estado);
+
+        List<Map<String, Object>> respuesta = resultado.stream()
+                .map(fila -> {
+                    Map<String, Object> item = new HashMap<>();
+                    item.put("idRecompensa", fila[0]);
+                    item.put("idTipo", fila[1]);
+                    item.put("nombre", fila[2]);
+                    item.put("costoPuntos", fila[3]);
+                    item.put("estado", fila[4]);
+                    item.put("imagenUrl", fila[5]);
+                    return item;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(respuesta);
     }
 }
