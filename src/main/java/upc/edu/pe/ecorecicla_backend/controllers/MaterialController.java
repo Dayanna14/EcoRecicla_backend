@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/materiales")
+@RequestMapping("/api/material")
 public class MaterialController {
 
     private final IMaterialService mS;
