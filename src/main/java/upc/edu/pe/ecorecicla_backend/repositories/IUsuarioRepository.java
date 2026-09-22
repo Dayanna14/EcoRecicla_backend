@@ -6,10 +6,13 @@ import org.springframework.stereotype.Repository;
 import upc.edu.pe.ecorecicla_backend.entities.Usuarios;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface IUsuarioRepository extends JpaRepository<Usuarios, Long> {
-    @Query(value = """
+
+    Optional<Usuarios> findByNombre(String nombre);
+@Query(value = """
     SELECT r.nombre, COUNT(u.id_usuario)
     FROM usuarios u
     INNER JOIN rol r ON u.idRol = r.idRol

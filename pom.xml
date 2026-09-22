@@ -74,6 +74,11 @@
             <version>3.1.0</version>
             <scope>compile</scope>
         </dependency>
+        <!-- JWT / OAuth2 Resource Server -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security-oauth2-resource-server</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

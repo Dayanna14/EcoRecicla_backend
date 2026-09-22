@@ -3,6 +3,7 @@ package upc.edu.pe.ecorecicla_backend.controllers;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.RecompensaInsertDTO;
@@ -29,6 +30,7 @@ public class RecompensaController {
         this.tS = tS;
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<RecompensaListDTO> registrar(
             @Valid @RequestBody RecompensaInsertDTO dto) {
@@ -55,6 +57,7 @@ public class RecompensaController {
                 .body(responseDTO);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<List<RecompensaListDTO>> listar() {
 
@@ -82,6 +85,7 @@ public class RecompensaController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(
             @PathVariable Long id) {
@@ -97,6 +101,7 @@ public class RecompensaController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping
     public ResponseEntity<RecompensaListDTO> actualizar(
             @Valid @RequestBody RecompensaInsertDTO dto) {

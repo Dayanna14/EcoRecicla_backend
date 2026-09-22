@@ -3,6 +3,7 @@ package upc.edu.pe.ecorecicla_backend.controllers;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.CanjeDTOInsert;
@@ -29,6 +30,7 @@ public class CanjeController {
         this.modelMapper = modelMapper;
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','RECICLADOR')")
     @GetMapping
     public ResponseEntity<List<CanjeDTOList>> list() {
         List<CanjeDTOList> listDTO = cS.list().stream()
@@ -37,6 +39,7 @@ public class CanjeController {
         return ResponseEntity.ok(listDTO);
     }
 
+    @PreAuthorize("hasRole('RECICLADOR')")
     @PostMapping
     public ResponseEntity<CanjeDTOInsert> insert(@Valid @RequestBody CanjeDTOInsert dto) {
         Canje canje = modelMapper.map(dto, Canje.class);

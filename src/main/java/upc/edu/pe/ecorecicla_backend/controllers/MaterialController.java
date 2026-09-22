@@ -3,6 +3,7 @@ package upc.edu.pe.ecorecicla_backend.controllers;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.MaterialDTOInsert;
@@ -35,6 +36,7 @@ public class MaterialController {
         return ResponseEntity.ok(listDTO);
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<MaterialDTOInsert> insert(@Valid @RequestBody MaterialDTOInsert dto) {
         Material material = modelMapper.map(dto, Material.class);

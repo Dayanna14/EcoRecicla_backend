@@ -3,6 +3,7 @@ package upc.edu.pe.ecorecicla_backend.controllers;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.CentroAcopioDTOInsert;
@@ -27,6 +28,7 @@ public class CentroAcopioController {
         this.cS = cS;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<List<CentroAcopioDTOList>> listar() {
 
@@ -38,6 +40,7 @@ public class CentroAcopioController {
         return ResponseEntity.ok(lista);
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
     @PostMapping
     public ResponseEntity<CentroAcopioDTOInsert> registrar(
             @Valid @RequestBody CentroAcopioDTOInsert dto) {
@@ -82,6 +85,7 @@ public class CentroAcopioController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
     @PutMapping
     public ResponseEntity<CentroAcopioDTOInsert> actualizar(
             @Valid @RequestBody CentroAcopioDTOInsert dto) {
