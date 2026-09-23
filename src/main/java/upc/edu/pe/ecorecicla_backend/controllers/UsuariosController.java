@@ -3,6 +3,7 @@ package upc.edu.pe.ecorecicla_backend.controllers;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.UsuarioInsertDTO;
@@ -30,6 +31,7 @@ public class UsuariosController {
         this.rS = rS;
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<UsuarioListDTO> registrar(
             @Valid @RequestBody UsuarioInsertDTO dto) {
@@ -56,6 +58,7 @@ public class UsuariosController {
                 .body(responseDTO);
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping
     public ResponseEntity<List<UsuarioListDTO>> listar() {
 

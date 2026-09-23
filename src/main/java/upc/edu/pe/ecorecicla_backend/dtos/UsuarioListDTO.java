@@ -5,7 +5,6 @@ public class UsuarioListDTO {
     private Long idRol;
     private String nombre;
     private String email;
-    private String contrasenia;
 
     public UsuarioListDTO() {
     }
@@ -42,11 +41,4 @@ public class UsuarioListDTO {
         this.email = email;
     }
 
-    public String getContrasenia() {
-        return contrasenia;
-    }
-
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
-    }
 }

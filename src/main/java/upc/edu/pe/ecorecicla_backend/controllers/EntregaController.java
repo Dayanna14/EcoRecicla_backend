@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.EntregaDTOInsert;
@@ -36,6 +37,7 @@ public class EntregaController {
         this.modelMapper = modelMapper;
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
 
     @GetMapping
     public ResponseEntity<List<EntregaDTOList>> list() {
@@ -46,6 +48,7 @@ public class EntregaController {
         return ResponseEntity.ok(listDTO);// HTTP 200 OK
     }
 
+    @PreAuthorize("hasRole('RECICLADOR')")
     @PostMapping
     public ResponseEntity<EntregaDTOInsert> insert(@Valid @RequestBody EntregaDTOInsert dto) {
 
@@ -87,6 +90,7 @@ public class EntregaController {
         return ResponseEntity.created(location).body(responseDTO);
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         eS.delete(id);

@@ -1,16 +1,23 @@
 package upc.edu.pe.ecorecicla_backend.entities;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "acopios")
+@Table(name = "canjes")
 public class Canje {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCanje;
-    //Falta atributos
 
+    @Column(name = "fecha", nullable = false)
+    private LocalDateTime fecha;
 
+    @Column(name = "puntos_usados", nullable = false)
+    private int puntosUsados;
+
+    @Column(name = "estado", length = 50, nullable = false)
+    private String estado; // "PENDIENTE", "COMPLETADO", etc.
 
     @ManyToOne
     @JoinColumn(name = "idRecompensa")
@@ -20,8 +27,16 @@ public class Canje {
     @JoinColumn(name = "idUsuario")
     private Usuarios usuario;
 
-
     public Canje() {}
+
+    public Canje(Long idCanje, LocalDateTime fecha, int puntosUsados, String estado, Recompensa recompensa, Usuarios usuario) {
+        this.idCanje = idCanje;
+        this.fecha = fecha;
+        this.puntosUsados = puntosUsados;
+        this.estado = estado;
+        this.recompensa = recompensa;
+        this.usuario = usuario;
+    }
 
     public Long getIdCanje() {
         return idCanje;
@@ -29,6 +44,30 @@ public class Canje {
 
     public void setIdCanje(Long idCanje) {
         this.idCanje = idCanje;
+    }
+
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDateTime fecha) {
+        this.fecha = fecha;
+    }
+
+    public int getPuntosUsados() {
+        return puntosUsados;
+    }
+
+    public void setPuntosUsados(int puntosUsados) {
+        this.puntosUsados = puntosUsados;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public Recompensa getRecompensa() {
