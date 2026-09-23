@@ -17,4 +17,16 @@ public interface IEntregaRepository extends JpaRepository<Entrega, Long> {
             "INNER JOIN materiales m ON e.id_material = m.id_material " +
             "WHERE DATE(e.fecha) = :fecha", nativeQuery = true)
     public List<Object[]> buscarPorFecha(@Param("fecha") LocalDate fecha);
+
+
+    @Query(value = "SELECT e.id_entrega, u.nombre AS usuario, m.nombre AS material, e.cantidad_kg, e.puntos_generedos, e.fecha " +
+            "FROM entregas e " +
+            "INNER JOIN usuarios u ON e.id_usuario = u.id_usuario " +
+            "INNER JOIN materiales m ON e.id_material = m.id_material " +
+            "WHERE (:idUsuario IS NULL OR e.id_usuario = :idUsuario) " +
+            "  AND (:idMaterial IS NULL OR e.id_material = :idMaterial)", nativeQuery = true)
+    public List<Object[]> obtenerReporteDetallado(
+            @Param("idUsuario") Long idUsuario,
+            @Param("idMaterial") Long idMaterial
+    );
 }

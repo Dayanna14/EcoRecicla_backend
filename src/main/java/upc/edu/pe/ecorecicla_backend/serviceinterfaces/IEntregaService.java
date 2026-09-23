@@ -18,6 +18,6 @@ public interface IEntregaService {
     public void update(Entrega entrega);
 
     public List<Object[]> buscarPorFecha(LocalDate fecha);
-
+    public List<Object[]> obtenerReporteDetallado(Long idUsuario, Long idMaterial);
 
 }

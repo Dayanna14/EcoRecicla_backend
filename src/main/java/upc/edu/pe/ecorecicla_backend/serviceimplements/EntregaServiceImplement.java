@@ -60,7 +60,10 @@ public class EntregaServiceImplement implements IEntregaService {
         return eR.buscarPorFecha(fecha);
     }
 
-
+    @Override
+    public List<Object[]> obtenerReporteDetallado(Long idUsuario, Long idMaterial) {
+        return eR.obtenerReporteDetallado(idUsuario, idMaterial);
+    }
 
 
 

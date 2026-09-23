@@ -162,5 +162,25 @@ public class EntregaController {
     }
 
 
+    @GetMapping("/reporte-detallado Usuario Material")
+    public ResponseEntity<List<EntregaDetalladaUsuarioyMaterialDTO>> obtenerReporteDetallado(
+            @RequestParam(value = "idUsuario", required = false) Long idUsuario,
+            @RequestParam(value = "idMaterial", required = false) Long idMaterial) {
+
+        List<EntregaDetalladaUsuarioyMaterialDTO> lista = eS.obtenerReporteDetallado(idUsuario, idMaterial)
+                .stream()
+                .map(item -> {
+                    EntregaDetalladaUsuarioyMaterialDTO dto = new EntregaDetalladaUsuarioyMaterialDTO();
+                    dto.setIdEntrega(((Number) item[0]).longValue());
+                    dto.setNombreUsuario((String) item[1]);
+                    dto.setNombreMaterial((String) item[2]);
+                    dto.setCantidadKg(((Number) item[3]).doubleValue());
+                    dto.setPuntosGenerados(((Number) item[4]).intValue());
+                    dto.setFecha(((java.sql.Timestamp) item[5]).toLocalDateTime());
+                    return dto;
+                }).toList();
+
+        return ResponseEntity.ok(lista);
+    }
 
 }
