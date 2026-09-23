@@ -50,4 +50,9 @@ public class TipoRecompensaServiceImplement implements ITipoRecompensaService {
     public List<Object[]> buscarRecompensaPorEstado(Boolean estado) {
         return tR.buscarRecompensaPorEstado(estado);
     }
+
+    @Override
+    public List<Object[]> tipoRecompensaMasUsado() {
+        return tR.tipoRecompensaMasUsado();
+    }
 }

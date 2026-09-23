@@ -12,4 +12,5 @@ public interface ITipoRecompensaService {
     List<TipoRecompensa> list();
     List<TipoRecompensa> buscarPorNombre(String nombre);
     List<Object[]> buscarRecompensaPorEstado(Boolean estado);
+    List<Object[]> tipoRecompensaMasUsado();
 }

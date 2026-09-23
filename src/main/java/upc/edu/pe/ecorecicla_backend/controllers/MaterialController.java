@@ -92,4 +92,9 @@ public class MaterialController {
 
         return ResponseEntity.ok(resultado);
     }
+
+    @GetMapping("/ranking")
+    public ResponseEntity<List<Object[]>> materialMasReciclado() {
+        return ResponseEntity.ok(mS.materialMasReciclado());
+    }
 }

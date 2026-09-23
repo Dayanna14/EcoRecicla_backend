@@ -115,4 +115,21 @@ public class TipoRecompensaController {
 
         return ResponseEntity.ok(respuesta);
     }
+
+    @GetMapping("/ranking")
+    public ResponseEntity<List<Map<String, Object>>> tipoRecompensaMasUsado() {
+        List<Object[]> resultado = tS.tipoRecompensaMasUsado();
+
+        List<Map<String, Object>> respuesta = resultado.stream()
+                .map(fila -> {
+                    Map<String, Object> item = new HashMap<>();
+                    item.put("nombreTipoRecompensa", fila[0]);
+                    item.put("cantidadCanjes", fila[1]);
+                    item.put("totalPuntosCanjeados", fila[2]);
+                    return item;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(respuesta);
+    }
 }
