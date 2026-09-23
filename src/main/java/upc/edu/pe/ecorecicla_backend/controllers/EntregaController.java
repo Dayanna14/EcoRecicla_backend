@@ -2,11 +2,14 @@ package upc.edu.pe.ecorecicla_backend.controllers;
 
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.EntregaDTOInsert;
 import upc.edu.pe.ecorecicla_backend.dtos.EntregaDTOList;
+import upc.edu.pe.ecorecicla_backend.dtos.EntregaDetalladaUsuarioyMaterialDTO;
+import upc.edu.pe.ecorecicla_backend.dtos.EntregaPorFechaDTO;
 import upc.edu.pe.ecorecicla_backend.entities.CentroAcopio;
 import upc.edu.pe.ecorecicla_backend.entities.Entrega;
 import upc.edu.pe.ecorecicla_backend.entities.Material;
@@ -15,6 +18,7 @@ import upc.edu.pe.ecorecicla_backend.exceptions.ResourceNotFoundException;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IEntregaService;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -136,4 +140,27 @@ public class EntregaController {
         // HTTP 200 OK
         return ResponseEntity.ok(dto);
     }
+
+    @GetMapping("/buscar-por-fecha")
+    public ResponseEntity<List<EntregaPorFechaDTO>> buscarPorFecha(
+            @RequestParam("fecha") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+
+        List<EntregaPorFechaDTO> lista = eS.buscarPorFecha(fecha)
+                .stream()
+                .map(item -> {
+                    EntregaPorFechaDTO dto = new EntregaPorFechaDTO();
+                    dto.setIdEntrega(((Number) item[0]).longValue());
+                    dto.setFecha(((java.sql.Timestamp) item[1]).toLocalDateTime());
+                    dto.setNombreCentro((String) item[2]);
+                    dto.setNombreMaterial((String) item[3]);
+                    dto.setCantidadKg(((Number) item[4]).doubleValue());
+                    dto.setPuntosGenerados(((Number) item[5]).intValue());
+                    return dto;
+                }).toList();
+
+        return ResponseEntity.ok(lista);
+    }
+
+
+
 }

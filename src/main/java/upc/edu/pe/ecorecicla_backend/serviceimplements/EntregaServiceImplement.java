@@ -1,11 +1,16 @@
 package upc.edu.pe.ecorecicla_backend.serviceimplements;
 
 import org.springframework.stereotype.Service;
+import upc.edu.pe.ecorecicla_backend.dtos.EntregaDetalladaUsuarioyMaterialDTO;
+import upc.edu.pe.ecorecicla_backend.dtos.EntregaPorFechaDTO;
 import upc.edu.pe.ecorecicla_backend.entities.Entrega;
 import upc.edu.pe.ecorecicla_backend.exceptions.ResourceNotFoundException;
 import upc.edu.pe.ecorecicla_backend.repositories.IEntregaRepository;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IEntregaService;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,5 +54,14 @@ public class EntregaServiceImplement implements IEntregaService {
         );
         eR.save(entrega);
     }
+
+    @Override
+    public List<Object[]> buscarPorFecha(LocalDate fecha) {
+        return eR.buscarPorFecha(fecha);
+    }
+
+
+
+
 
 }
