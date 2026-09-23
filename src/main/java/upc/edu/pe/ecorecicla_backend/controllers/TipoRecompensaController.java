@@ -4,6 +4,7 @@ package upc.edu.pe.ecorecicla_backend.controllers;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.TipoRecompensaDTOInsert;
@@ -46,6 +47,7 @@ public class TipoRecompensaController {
         return ResponseEntity.ok(modelMapper.map(tipo, TipoRecompensaDTOList.class));
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<TipoRecompensaDTOInsert> insert(@Valid @RequestBody TipoRecompensaDTOInsert dto) {
         TipoRecompensa tipo = modelMapper.map(dto, TipoRecompensa.class);

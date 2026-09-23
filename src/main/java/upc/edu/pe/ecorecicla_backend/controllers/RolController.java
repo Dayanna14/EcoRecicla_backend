@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.RolDTOInsert;
@@ -34,6 +35,8 @@ public class RolController {
                 .toList();
         return ResponseEntity.ok(lista);
     }
+
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
 
     public ResponseEntity<RolDTOInsert> registrar(

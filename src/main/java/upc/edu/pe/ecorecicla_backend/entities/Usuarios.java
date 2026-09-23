@@ -2,24 +2,41 @@ package upc.edu.pe.ecorecicla_backend.entities;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name = "usuarios")
-public class Usuarios {
+@Table( name = "Usuarios",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "email")
+        })
+public class Usuarios implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_usuario;
     @ManyToOne
     @JoinColumn(name = "idRol")
     private Rol rol;
-
     @Column(name = "nombre",length = 35,nullable = false)
     private String nombre;
     @Column(name = "email",length = 70,nullable = false)
     private String email;
     @Column(name = "contrasenia",length = 70,nullable = false )
     private String contrasenia;
+    @Column(nullable = false)
+    private Boolean enabled=true;
+
 
     public Usuarios() {
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Long getId_usuario() {
