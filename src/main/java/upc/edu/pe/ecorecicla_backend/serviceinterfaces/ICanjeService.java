@@ -12,4 +12,5 @@ public interface ICanjeService {
     Optional<Canje> listId(Long id);
     void update(Canje canje);
     List<Canje> buscarPorEstado(String estado);
+    List<Object[]> canjesPorUsuario();
 }

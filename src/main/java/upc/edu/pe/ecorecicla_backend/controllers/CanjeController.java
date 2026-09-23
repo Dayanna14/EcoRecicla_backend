@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.CanjeDTOInsert;
 import upc.edu.pe.ecorecicla_backend.dtos.CanjeDTOList;
+import upc.edu.pe.ecorecicla_backend.dtos.CanjePorUsuarioDTO;
 import upc.edu.pe.ecorecicla_backend.entities.Canje;
 import upc.edu.pe.ecorecicla_backend.entities.Recompensa;
 import upc.edu.pe.ecorecicla_backend.entities.Usuarios;
@@ -113,6 +114,20 @@ public class CanjeController {
         List<CanjeDTOList> lista = cS.buscarPorEstado(estado).stream()
                 .map(canje -> modelMapper.map(canje, CanjeDTOList.class))
                 .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/canjes-por-usuario")
+    public ResponseEntity<List<CanjePorUsuarioDTO>> canjesPorUsuario() {
+        List<CanjePorUsuarioDTO> lista = cS.canjesPorUsuario()
+                .stream()
+                .map(item -> {
+                    CanjePorUsuarioDTO dto = new CanjePorUsuarioDTO();
+                    dto.setNombreUsuario((String) item[0]);
+                    dto.setCantidadCanjes(((Number) item[1]).intValue());
+                    return dto;
+                })
+                .toList();
         return ResponseEntity.ok(lista);
     }
 }

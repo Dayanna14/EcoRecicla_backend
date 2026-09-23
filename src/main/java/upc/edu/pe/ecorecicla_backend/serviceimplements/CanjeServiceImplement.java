@@ -52,4 +52,9 @@ public class CanjeServiceImplement implements ICanjeService {
     public List<Canje> buscarPorEstado(String estado) {
         return cR.findByEstadoIgnoreCase(estado);
     }
+
+    @Override
+    public List<Object[]> canjesPorUsuario() {
+        return cR.canjesPorUsuario();
+    }
 }
