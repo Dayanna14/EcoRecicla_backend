@@ -13,22 +13,25 @@ public interface TipoRecompensaRepository extends JpaRepository<TipoRecompensa, 
     List<TipoRecompensa> findByNombreTipoRecompensaContainingIgnoreCase(String nombre);
 
     @Query(value = """
-        SELECT r.*
-        FROM recompensa r
-        INNER JOIN tipoRecompensas t
-        ON r.id_tipo = t.idTipoRecompensa
-        WHERE r.estado = :estado
+
+            SELECT r.*
+        FROM recompensas r
+        INNER JOIN tipo_recompensas t
+        ON r.id_tipo_recompensa = t.id_tipo_recompensa
+        WHERE r.estado = ?;
         """, nativeQuery = true)
     List<Object[]> buscarRecompensaPorEstado(@Param("estado") Boolean estado);
 
     @Query(value = """
-        SELECT t.name_tipo_recompensa,
+
+            SELECT t.name_tipo_recompensa,
                COUNT(r.id_recompensa) AS cantidad_canjes,
                SUM(r.costo_puntos) AS total_puntos_canjeados
-        FROM tipoRecompensas t
-        INNER JOIN recompensas r ON t.id_tipo_recompensa = r.id_tipo
+        FROM tipo_recompensas t
+        INNER JOIN recompensas r
+        ON t.id_tipo_recompensa = r.id_tipo_recompensa
         GROUP BY t.name_tipo_recompensa
-        ORDER BY cantidad_canjes DESC
+        ORDER BY cantidad_canjes DESC;
         """, nativeQuery = true)
     List<Object[]> tipoRecompensaMasUsado();
 }
