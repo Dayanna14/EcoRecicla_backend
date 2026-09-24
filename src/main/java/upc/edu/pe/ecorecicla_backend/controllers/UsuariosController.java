@@ -136,4 +136,10 @@ public class UsuariosController {
     public ResponseEntity<List<Object[]>> usuariosPorRol() {
         return ResponseEntity.ok(uS.usuariosPorRol());
     }
+
+    @GetMapping("/usuarios-por-estado")
+    public ResponseEntity<List<Object[]>> usuariosPorEstado() {
+        return ResponseEntity.ok(uS.usuariosPorEstado());
+    }
+
 }

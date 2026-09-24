@@ -12,4 +12,5 @@ public interface IUsuarioService {
     public void update(Usuarios users);
     public Optional<Usuarios> listId(Long id);
     List<Object[]> usuariosPorRol();
+    List<Object[]> usuariosPorEstado();
 }

@@ -10,15 +10,13 @@ import java.util.List;
 @Repository
 public interface IRecompensaRepository extends JpaRepository<Recompensa, Long> {
     @Query(value = """
-    SELECT r.nombre,
-           tr.name_tipo_recompensa,
-           r.costo_puntos
-    FROM recompensas r
-    INNER JOIN tipo_recompensas tr
-        ON r.id_tipo_recompensa = tr.id_tipo_recompensa
-    WHERE r.estado = true
-    ORDER BY r.costo_puntos DESC
-    LIMIT 5
+  SELECT r.nombre,
+  COUNT(c.id_canje) AS total_canjes
+   FROM canjes c
+  INNER JOIN recompensas r
+   ON c.id_recompensa = r.id_recompensa
+    GROUP BY r.nombre
+    ORDER BY total_canjes DESC
     """, nativeQuery = true)
-    List<Object[]> recompensasMayorCosto();
+    List<Object[]> tipoRecompensaMasCanjeado();
 }

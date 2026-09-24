@@ -41,4 +41,9 @@ public class RecompensaServiceImplement implements IRecompensaService {
     public Optional<Recompensa> listId(Long id) {
         return rR.findById(id);
     }
+
+    @Override
+    public List<Object[]> tipoRecompensaMasCanjeado() {
+        return rR.tipoRecompensaMasCanjeado();
+    }
 }
