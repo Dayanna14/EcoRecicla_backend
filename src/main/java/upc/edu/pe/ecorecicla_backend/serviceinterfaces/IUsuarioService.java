@@ -11,5 +11,5 @@ public interface IUsuarioService {
     public void delete(Long id);
     public void update(Usuarios users);
     public Optional<Usuarios> listId(Long id);
-    List<Object[]> usuariosPorRol();
+    List<Object[]> usuariosPorEstado();
 }

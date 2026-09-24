@@ -36,7 +36,7 @@ public class RolController {
         return ResponseEntity.ok(lista);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRADOR')")
     @PostMapping
 
     public ResponseEntity<RolDTOInsert> registrar(

@@ -33,8 +33,7 @@ public class EntregaController {
         this.modelMapper = modelMapper;
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR_CENTRO','ROLE_RECICLADOR')")
     @GetMapping
     public ResponseEntity<List<EntregaDTOList>> list() {
         List<EntregaDTOList> listDTO = eS.list().stream()
@@ -44,7 +43,7 @@ public class EntregaController {
         return ResponseEntity.ok(listDTO);// HTTP 200 OK
     }
 
-    @PreAuthorize("hasRole('RECICLADOR')")
+    @PreAuthorize("hasRole('ROLE_RECICLADOR')")
     @PostMapping
     public ResponseEntity<EntregaDTOInsert> insert(@Valid @RequestBody EntregaDTOInsert dto) {
 
@@ -86,7 +85,7 @@ public class EntregaController {
         return ResponseEntity.created(location).body(responseDTO);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         eS.delete(id);
@@ -97,7 +96,7 @@ public class EntregaController {
     public ResponseEntity<EntregaDTOInsert> update(@Valid @RequestBody EntregaDTOInsert dto) {
 
         if (dto.getIdEntrega() == null) {
-            throw new IllegalArgumentException("El idEntrega no puede ser nulo para actualizar.");
+            throw new IllegalArgumentException("El ID de entrega no puede ser nulo para actualizar.");
         }
 
 
@@ -131,7 +130,7 @@ public class EntregaController {
     public ResponseEntity<EntregaDTOList> listId(@PathVariable("id") Long id) {
 
         Entrega entrega = eS.listId(id).orElseThrow(() ->
-                new ResourceNotFoundException("No se encontró la entrega con el id: " + id)
+                new ResourceNotFoundException("No se encontró la entrega con el ID: " + id)
         );
 
 

@@ -30,7 +30,7 @@ public class RecompensaController {
         this.tS = tS;
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<RecompensaListDTO> registrar(
             @Valid @RequestBody RecompensaInsertDTO dto) {
@@ -85,7 +85,7 @@ public class RecompensaController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(
             @PathVariable Long id) {
@@ -101,7 +101,7 @@ public class RecompensaController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRADOR')")
     @PutMapping
     public ResponseEntity<RecompensaListDTO> actualizar(
             @Valid @RequestBody RecompensaInsertDTO dto) {
@@ -111,7 +111,7 @@ public class RecompensaController {
 
         if (existente.isEmpty()) {
             throw new ResourceNotFoundException(
-                    "No existe un recompensa con el id: "
+                    "No existe una recompensa con el id: "
                             + dto.getIdRecompensa()
             );
         }
@@ -131,6 +131,11 @@ public class RecompensaController {
                 modelMapper.map(recom, RecompensaListDTO.class);
 
         return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/recompensas-mayor-costo")
+    public List<Object[]> recompensasMayorCosto() {
+        return rS.recompensasMayorCosto();
     }
 
 }

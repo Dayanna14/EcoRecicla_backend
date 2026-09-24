@@ -11,4 +11,5 @@ public interface IRecompensaService {
     public void delete(Long id);
     public void update(Recompensa recom);
     public Optional<Recompensa> listId(Long id);
+    List<Object[]> recompensasMayorCosto();
 }

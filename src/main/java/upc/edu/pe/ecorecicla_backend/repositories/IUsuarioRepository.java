@@ -12,12 +12,10 @@ import java.util.Optional;
 public interface IUsuarioRepository extends JpaRepository<Usuarios, Long> {
 
     Optional<Usuarios> findByNombre(String nombre);
-@Query(value = """
-    SELECT r.nombre, COUNT(u.id_usuario)
-    FROM usuarios u
-    INNER JOIN rol r ON u.idRol = r.idRol
-    GROUP BY r.nombre
-    ORDER BY COUNT(u.id_usuario) DESC
+    @Query(value = """
+    SELECT enabled, COUNT(*)
+    FROM usuarios
+    GROUP BY enabled
     """, nativeQuery = true)
-    List<Object[]> usuariosPorRol();
+    List<Object[]> usuariosPorEstado();
 }

@@ -40,7 +40,7 @@ public class CentroAcopioController {
         return ResponseEntity.ok(lista);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR_CENTRO')")
     @PostMapping
     public ResponseEntity<CentroAcopioDTOInsert> registrar(
             @Valid @RequestBody CentroAcopioDTOInsert dto) {
@@ -85,7 +85,7 @@ public class CentroAcopioController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRADOR','ROLE_OPERADOR_CENTRO')")
     @PutMapping
     public ResponseEntity<CentroAcopioDTOInsert> actualizar(
             @Valid @RequestBody CentroAcopioDTOInsert dto) {

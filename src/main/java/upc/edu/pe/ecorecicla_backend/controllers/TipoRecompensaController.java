@@ -45,7 +45,7 @@ public class TipoRecompensaController {
         return ResponseEntity.ok(modelMapper.map(tipo, TipoRecompensaDTOList.class));
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<TipoRecompensaDTOInsert> insert(@Valid @RequestBody TipoRecompensaDTOInsert dto) {
         TipoRecompensa tipo = modelMapper.map(dto, TipoRecompensa.class);

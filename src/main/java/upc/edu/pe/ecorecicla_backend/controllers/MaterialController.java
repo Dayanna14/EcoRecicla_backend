@@ -36,7 +36,7 @@ public class MaterialController {
         return ResponseEntity.ok(listDTO);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<MaterialDTOInsert> insert(@Valid @RequestBody MaterialDTOInsert dto) {
         Material material = modelMapper.map(dto, Material.class);

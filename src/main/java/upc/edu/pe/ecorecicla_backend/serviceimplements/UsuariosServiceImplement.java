@@ -43,7 +43,7 @@ public class UsuariosServiceImplement implements IUsuarioService {
     }
 
     @Override
-    public List<Object[]> usuariosPorRol() {
-        return uR.usuariosPorRol();
+    public List<Object[]> usuariosPorEstado() {
+        return List.of();
     }
 }

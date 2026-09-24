@@ -31,7 +31,7 @@ public class UsuariosController {
         this.rS = rS;
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<UsuarioListDTO> registrar(
             @Valid @RequestBody UsuarioInsertDTO dto) {
@@ -58,7 +58,7 @@ public class UsuariosController {
                 .body(responseDTO);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRADOR')")
     @GetMapping
     public ResponseEntity<List<UsuarioListDTO>> listar() {
 
@@ -132,8 +132,9 @@ public class UsuariosController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @GetMapping("/queries/usuarios-por-rol")
-    public ResponseEntity<List<Object[]>> usuariosPorRol() {
-        return ResponseEntity.ok(uS.usuariosPorRol());
+    @GetMapping("/usuarios-por-estado")
+    public List<Object[]> usuariosPorEstado() {
+        return uS.usuariosPorEstado();
     }
 }
+

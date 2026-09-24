@@ -30,7 +30,7 @@ public class CanjeController {
         this.modelMapper = modelMapper;
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','RECICLADOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRADOR','ROLE_RECICLADOR')")
     @GetMapping
     public ResponseEntity<List<CanjeDTOList>> list() {
         List<CanjeDTOList> listDTO = cS.list().stream()
@@ -39,7 +39,7 @@ public class CanjeController {
         return ResponseEntity.ok(listDTO);
     }
 
-    @PreAuthorize("hasRole('RECICLADOR')")
+    @PreAuthorize("hasRole('ROLE_RECICLADOR')")
     @PostMapping
     public ResponseEntity<CanjeDTOInsert> insert(@Valid @RequestBody CanjeDTOInsert dto) {
         Canje canje = modelMapper.map(dto, Canje.class);
