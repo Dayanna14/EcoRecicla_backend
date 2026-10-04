@@ -40,4 +40,15 @@ public class MaterialServiceImplement implements IMaterialService {
     public List<Material> list() {
         return mR.findAll();
     }
+
+    @Override
+    public List<Material> buscarPorNombre(String nombre) {
+        return mR.buscarPorNombre(nombre);
+    }
+
+    @Override
+    public List<Object[]> materialMasReciclado() {
+        return mR.materialMasReciclado();
+    }
+
 }

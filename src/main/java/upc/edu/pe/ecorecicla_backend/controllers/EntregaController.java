@@ -154,7 +154,7 @@ public class EntregaController {
                 .map(item -> {
                     EntregaPorFechaDTO dto = new EntregaPorFechaDTO();
                     dto.setIdEntrega(((Number) item[0]).longValue());
-                    dto.setFecha(((java.sql.Timestamp) item[1]).toLocalDateTime());
+                    dto.setFecha((LocalDateTime) item[1]);
                     dto.setNombreCentro((String) item[2]);
                     dto.setNombreMaterial((String) item[3]);
                     dto.setCantidadKg(((Number) item[4]).doubleValue());
@@ -166,7 +166,7 @@ public class EntregaController {
     }
 
 
-    @GetMapping("/reporte-detallado Usuario Material")
+    @GetMapping("/reporte-detallado-Usuario-Material")
     public ResponseEntity<List<EntregaDetalladaUsuarioyMaterialDTO>> obtenerReporteDetallado(
             @RequestParam(value = "idUsuario", required = false) Long idUsuario,
             @RequestParam(value = "idMaterial", required = false) Long idMaterial) {
@@ -180,7 +180,7 @@ public class EntregaController {
                     dto.setNombreMaterial((String) item[2]);
                     dto.setCantidadKg(((Number) item[3]).doubleValue());
                     dto.setPuntosGenerados(((Number) item[4]).intValue());
-                    dto.setFecha(((java.sql.Timestamp) item[5]).toLocalDateTime());
+                    dto.setFecha((LocalDateTime) item[5]);
                     return dto;
                 }).toList();
 

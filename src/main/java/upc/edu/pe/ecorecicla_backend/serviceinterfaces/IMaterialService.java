@@ -10,5 +10,6 @@ public interface IMaterialService {
     public void delete(Long id);
     public Material listId(Long id);
     public List<Material> list();
-
+    List<Material> buscarPorNombre(String nombre);
+    List<Object[]> materialMasReciclado();
 }

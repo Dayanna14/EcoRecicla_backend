@@ -36,6 +36,16 @@ public class MaterialController {
         return ResponseEntity.ok(listDTO);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<MaterialDTOList> listId(@PathVariable Long id) {
+        Material material = mS.listId(id);
+        if (material == null) {
+            return ResponseEntity.notFound().build();
+        }
+        MaterialDTOList dto = modelMapper.map(material, MaterialDTOList.class);
+        return ResponseEntity.ok(dto);
+    }
+
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<MaterialDTOInsert> insert(@Valid @RequestBody MaterialDTOInsert dto) {
@@ -52,5 +62,39 @@ public class MaterialController {
                 .toUri();
 
         return ResponseEntity.created(location).body(responseDTO);
+    }
+
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PutMapping("/{id}")
+    public ResponseEntity<MaterialDTOInsert> update(@PathVariable Long id,
+                                                    @Valid @RequestBody MaterialDTOInsert dto) {
+        Material material = modelMapper.map(dto, Material.class);
+        material.setIdMaterial(id);
+
+        mS.update(material);
+
+        MaterialDTOInsert responseDTO = modelMapper.map(material, MaterialDTOInsert.class);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        mS.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<MaterialDTOList>> buscarPorNombre(@RequestParam String nombre) {
+        List<MaterialDTOList> resultado = mS.buscarPorNombre(nombre).stream()
+                .map(material -> modelMapper.map(material, MaterialDTOList.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/ranking")
+    public ResponseEntity<List<Object[]>> materialMasReciclado() {
+        return ResponseEntity.ok(mS.materialMasReciclado());
     }
 }

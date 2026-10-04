@@ -133,4 +133,8 @@ public class RecompensaController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @GetMapping("/tipo-recompensa-mas-canjeado")
+    public ResponseEntity<List<Object[]>> tipoRecompensaMasCanjeado() {
+        return ResponseEntity.ok(rS.tipoRecompensaMasCanjeado());
+    }
 }
