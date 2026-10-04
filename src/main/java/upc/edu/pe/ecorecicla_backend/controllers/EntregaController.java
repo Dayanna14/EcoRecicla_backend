@@ -145,7 +145,7 @@ public class EntregaController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/buscar-por-fecha")
+    @GetMapping("/buscar/fecha")
     public ResponseEntity<List<EntregaPorFechaDTO>> buscarPorFecha(
             @RequestParam("fecha") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
 
@@ -166,7 +166,7 @@ public class EntregaController {
     }
 
 
-    @GetMapping("/reporte-detallado-Usuario-Material")
+    @GetMapping("/reportedetallado/UsuarioMaterial")
     public ResponseEntity<List<EntregaDetalladaUsuarioyMaterialDTO>> obtenerReporteDetallado(
             @RequestParam(value = "idUsuario", required = false) Long idUsuario,
             @RequestParam(value = "idMaterial", required = false) Long idMaterial) {
@@ -184,7 +184,17 @@ public class EntregaController {
                     return dto;
                 }).toList();
 
+
         return ResponseEntity.ok(lista);
+        }
+
+
+    @GetMapping("/contar/masde100puntos")
+    public ResponseEntity<Long> contarEntregas100Puntos() {
+        Long total = eS.contarEntregas100PuntosGenerados();
+        return ResponseEntity.ok(total); // HTTP 200 OK con el número total
     }
+
+
 
 }

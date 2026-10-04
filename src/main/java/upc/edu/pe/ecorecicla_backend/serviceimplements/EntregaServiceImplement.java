@@ -65,6 +65,10 @@ public class EntregaServiceImplement implements IEntregaService {
         return eR.obtenerReporteDetallado(idUsuario, idMaterial);
     }
 
+    @Override
+    public Long contarEntregas100PuntosGenerados() {
+        return eR.contarEntregas100PuntosGenerados();
+    }
 
 
 }
