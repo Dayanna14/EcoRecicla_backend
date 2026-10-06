@@ -127,7 +127,7 @@ public class UsuariosController {
 
         usuario.setNombre(dto.getNombre());
         usuario.setEmail(dto.getEmail());
-        usuario.setContrasenia(dto.getContrasenia());
+        usuario.setContrasenia(passwordEncoder.encode(dto.getContrasenia()));
         usuario.setRol(rol);
 
         uS.update(usuario);

@@ -10,6 +10,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.TipoRecompensaDTOInsert;
 import upc.edu.pe.ecorecicla_backend.dtos.TipoRecompensaDTOList;
 import upc.edu.pe.ecorecicla_backend.entities.TipoRecompensa;
+import upc.edu.pe.ecorecicla_backend.exceptions.ResourceNotFoundException;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.ITipoRecompensaService;
 
 import java.net.URI;
@@ -42,7 +43,7 @@ public class TipoRecompensaController {
     public ResponseEntity<TipoRecompensaDTOList> listId(@PathVariable Long id) {
         TipoRecompensa tipo = tS.listId(id);
         if (tipo == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("El tipo de recompensa no existe.");
         }
         return ResponseEntity.ok(modelMapper.map(tipo, TipoRecompensaDTOList.class));
     }

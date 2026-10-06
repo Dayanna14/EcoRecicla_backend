@@ -2,7 +2,6 @@ package upc.edu.pe.ecorecicla_backend.controllers;
 
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -73,19 +72,11 @@ public class RolController {
     }
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id) {
-
-        try {
-            rS.delete(id);
-            return ResponseEntity.noContent().build();
-
-        } catch (DataIntegrityViolationException e) {
-
-            return ResponseEntity.badRequest().body(
-                    "No se puede eliminar el rol porque tiene usuarios asociados."
-            );
-        }
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        rS.delete(id);
+        return ResponseEntity.noContent().build();
     }
+
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping
     public ResponseEntity<RolDTOInsert> actualizar(

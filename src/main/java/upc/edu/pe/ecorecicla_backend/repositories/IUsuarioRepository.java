@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface IUsuarioRepository extends JpaRepository<Usuarios, Long> {
 
-    Optional<Usuarios> findByNombre(String nombre);
+    Optional<Usuarios> findByNombreIgnoreCase(String nombre);
     @Query(value = """
     SELECT
         CASE
