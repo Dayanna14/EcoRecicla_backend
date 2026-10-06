@@ -29,4 +29,5 @@ public interface IEntregaRepository extends JpaRepository<Entrega, Long> {
             @Param("idUsuario") Long idUsuario,
             @Param("idMaterial") Long idMaterial
     );
+
 }

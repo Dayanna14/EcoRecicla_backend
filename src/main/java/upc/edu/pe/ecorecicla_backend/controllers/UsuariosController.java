@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.UsuarioInsertDTO;
@@ -24,11 +25,13 @@ public class UsuariosController {
     private final IUsuarioService uS;
     private final ModelMapper modelMapper;
     private final IRolService rS;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuariosController(IUsuarioService uS, ModelMapper modelMapper, IRolService rS) {
+    public UsuariosController(IUsuarioService uS, ModelMapper modelMapper, IRolService rS, PasswordEncoder passwordEncoder) {
         this.uS = uS;
         this.modelMapper = modelMapper;
         this.rS = rS;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
@@ -41,6 +44,8 @@ public class UsuariosController {
         Usuarios usuario = modelMapper.map(dto, Usuarios.class);
 
         usuario.setRol(rol);
+
+        usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
 
         uS.insert(usuario);
 
