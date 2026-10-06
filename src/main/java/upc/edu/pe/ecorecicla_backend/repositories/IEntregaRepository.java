@@ -30,4 +30,6 @@ public interface IEntregaRepository extends JpaRepository<Entrega, Long> {
             @Param("idMaterial") Long idMaterial
     );
 
+    @Query(value = "SELECT COUNT(*) FROM entregas WHERE puntos_generedos > 100", nativeQuery = true)
+    public Long contarEntregas100PuntosGenerados();
 }
