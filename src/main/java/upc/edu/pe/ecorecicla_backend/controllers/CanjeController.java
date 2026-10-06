@@ -31,7 +31,7 @@ public class CanjeController {
         this.modelMapper = modelMapper;
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','RECICLADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping
     public ResponseEntity<List<CanjeDTOList>> list() {
         List<CanjeDTOList> listDTO = cS.list().stream()
@@ -40,7 +40,7 @@ public class CanjeController {
         return ResponseEntity.ok(listDTO);
     }
 
-    @PreAuthorize("hasRole('RECICLADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','RECICLADOR')")
     @PostMapping
     public ResponseEntity<CanjeDTOInsert> insert(@Valid @RequestBody CanjeDTOInsert dto) {
         Canje canje = modelMapper.map(dto, Canje.class);
@@ -72,6 +72,7 @@ public class CanjeController {
         return ResponseEntity.created(location).body(responseDTO);
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/{id}")
     public ResponseEntity<CanjeDTOList> listId(@PathVariable("id") Long id) {
         Canje canje = cS.listId(id).orElseThrow(() ->
@@ -80,13 +81,14 @@ public class CanjeController {
         CanjeDTOList dto = modelMapper.map(canje, CanjeDTOList.class);
         return ResponseEntity.ok(dto);
     }
-
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         cS.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping
     public ResponseEntity<CanjeDTOInsert> update(@Valid @RequestBody CanjeDTOInsert dto) {
         if (dto.getIdCanje() == null) {
@@ -111,7 +113,7 @@ public class CanjeController {
 
         return ResponseEntity.ok(responseDTO);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/buscar")
     public ResponseEntity<List<CanjeDTOList>> buscarPorEstado(@RequestParam String estado) {
         List<CanjeDTOList> lista = cS.buscarPorEstado(estado).stream()
@@ -119,7 +121,7 @@ public class CanjeController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(lista);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/canjes-por-usuario")
     public ResponseEntity<List<CanjePorUsuarioDTO>> canjesPorUsuario() {
         List<CanjePorUsuarioDTO> lista = cS.canjesPorUsuario()

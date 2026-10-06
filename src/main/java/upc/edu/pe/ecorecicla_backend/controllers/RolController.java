@@ -18,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/roles")
+@PreAuthorize("hasRole('ADMINISTRADOR')")
 public class RolController {
     private final ModelMapper modelMapper;
     private final IRolService rS;
@@ -26,8 +27,8 @@ public class RolController {
         this.modelMapper = modelMapper;
         this.rS = rS;
     }
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping
-
     public ResponseEntity<List<RolDTOList>> listar() {
         List<RolDTOList> lista = rS.list()
                 .stream()
@@ -38,7 +39,6 @@ public class RolController {
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
-
     public ResponseEntity<RolDTOInsert> registrar(
             @Valid @RequestBody RolDTOInsert dto) {
 
@@ -59,6 +59,7 @@ public class RolController {
                 .created(location)
                 .body(responseDTO);
     }
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/{id}")
     public ResponseEntity<RolDTOInsert> buscarPorId(
             @PathVariable Long id) {
@@ -70,6 +71,7 @@ public class RolController {
 
         return ResponseEntity.ok(dto);
     }
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id) {
 
@@ -84,6 +86,7 @@ public class RolController {
             );
         }
     }
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping
     public ResponseEntity<RolDTOInsert> actualizar(
             @Valid @RequestBody RolDTOInsert dto) {
@@ -97,6 +100,7 @@ public class RolController {
 
         return ResponseEntity.ok(responseDTO);
     }
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/buscar")
     public ResponseEntity<List<RolDTOList>> buscarPorNombre(
             @RequestParam String nombre) {
@@ -108,7 +112,7 @@ public class RolController {
 
         return ResponseEntity.ok(lista);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/rol-mas-utilizado")
     public ResponseEntity<List<RolMasUtilizadoDTO>> rolMasUtilizado() {
 

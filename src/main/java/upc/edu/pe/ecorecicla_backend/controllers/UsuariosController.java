@@ -21,6 +21,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
+@PreAuthorize("hasRole('ADMINISTRADOR')")
 public class UsuariosController {
     private final IUsuarioService uS;
     private final ModelMapper modelMapper;
@@ -33,7 +34,6 @@ public class UsuariosController {
         this.rS = rS;
         this.passwordEncoder = passwordEncoder;
     }
-
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<UsuarioListDTO> registrar(
@@ -62,8 +62,7 @@ public class UsuariosController {
                 .created(location)
                 .body(responseDTO);
     }
-
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping
     public ResponseEntity<List<UsuarioListDTO>> listar() {
 
@@ -74,7 +73,7 @@ public class UsuariosController {
 
         return ResponseEntity.ok(lista);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioListDTO> buscarId(
             @PathVariable Long id) {
@@ -91,6 +90,7 @@ public class UsuariosController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(
             @PathVariable Long id) {
@@ -106,6 +106,7 @@ public class UsuariosController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping
     public ResponseEntity<UsuarioListDTO> actualizar(
             @Valid @RequestBody UsuarioInsertDTO dto) {
@@ -136,12 +137,12 @@ public class UsuariosController {
 
         return ResponseEntity.ok(responseDTO);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/queries/usuarios-por-rol")
     public ResponseEntity<List<Object[]>> usuariosPorRol() {
         return ResponseEntity.ok(uS.usuariosPorRol());
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/usuarios-por-estado")
     public ResponseEntity<List<Object[]>> usuariosPorEstado() {
         return ResponseEntity.ok(uS.usuariosPorEstado());
