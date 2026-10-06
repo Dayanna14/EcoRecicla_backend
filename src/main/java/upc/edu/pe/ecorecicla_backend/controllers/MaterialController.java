@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.MaterialDTOInsert;
 import upc.edu.pe.ecorecicla_backend.dtos.MaterialDTOList;
+import upc.edu.pe.ecorecicla_backend.dtos.MaterialMasRecicladoDTO;
 import upc.edu.pe.ecorecicla_backend.entities.Material;
 import upc.edu.pe.ecorecicla_backend.exceptions.ResourceNotFoundException;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IMaterialService;
@@ -27,6 +28,7 @@ public class MaterialController {
         this.mS = mS;
         this.modelMapper = modelMapper;
     }
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping
     public ResponseEntity<List<MaterialDTOList>> list() {
@@ -36,6 +38,7 @@ public class MaterialController {
 
         return ResponseEntity.ok(listDTO);
     }
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/{id}")
     public ResponseEntity<MaterialDTOList> listId(@PathVariable Long id) {
@@ -90,6 +93,7 @@ public class MaterialController {
         mS.delete(id);
         return ResponseEntity.noContent().build();
     }
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/buscar")
     public ResponseEntity<List<MaterialDTOList>> buscarPorNombre(@RequestParam String nombre) {
@@ -99,9 +103,21 @@ public class MaterialController {
 
         return ResponseEntity.ok(resultado);
     }
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/ranking")
-    public ResponseEntity<List<Object[]>> materialMasReciclado() {
-        return ResponseEntity.ok(mS.materialMasReciclado());
+    public ResponseEntity<List<MaterialMasRecicladoDTO>> materialMasReciclado() {
+        List<MaterialMasRecicladoDTO> lista = mS.materialMasReciclado()
+                .stream()
+                .map(item -> {
+                    MaterialMasRecicladoDTO dto = new MaterialMasRecicladoDTO();
+                    dto.setNombreMaterial((String) item[0]);
+                    dto.setTotalKgReciclados(((Number) item[1]).doubleValue());
+                    dto.setCantidadEntregas(((Number) item[2]).intValue());
+                    return dto;
+                })
+                .toList();
+
+        return ResponseEntity.ok(lista);
     }
 }

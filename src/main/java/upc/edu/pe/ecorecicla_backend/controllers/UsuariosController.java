@@ -7,8 +7,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import upc.edu.pe.ecorecicla_backend.dtos.RolMasUtilizadoDTO;
 import upc.edu.pe.ecorecicla_backend.dtos.UsuarioInsertDTO;
 import upc.edu.pe.ecorecicla_backend.dtos.UsuarioListDTO;
+import upc.edu.pe.ecorecicla_backend.dtos.UsuarioPorEstadoDTO;
 import upc.edu.pe.ecorecicla_backend.entities.Rol;
 import upc.edu.pe.ecorecicla_backend.entities.Usuarios;
 import upc.edu.pe.ecorecicla_backend.exceptions.ResourceNotFoundException;
@@ -34,7 +36,7 @@ public class UsuariosController {
         this.rS = rS;
         this.passwordEncoder = passwordEncoder;
     }
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+
     @PostMapping
     public ResponseEntity<UsuarioListDTO> registrar(
             @Valid @RequestBody UsuarioInsertDTO dto) {
@@ -62,7 +64,7 @@ public class UsuariosController {
                 .created(location)
                 .body(responseDTO);
     }
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
+
     @GetMapping
     public ResponseEntity<List<UsuarioListDTO>> listar() {
 
@@ -73,7 +75,8 @@ public class UsuariosController {
 
         return ResponseEntity.ok(lista);
     }
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
+
+
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioListDTO> buscarId(
             @PathVariable Long id) {
@@ -90,7 +93,7 @@ public class UsuariosController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(
             @PathVariable Long id) {
@@ -106,7 +109,7 @@ public class UsuariosController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+
     @PutMapping
     public ResponseEntity<UsuarioListDTO> actualizar(
             @Valid @RequestBody UsuarioInsertDTO dto) {
@@ -137,15 +140,35 @@ public class UsuariosController {
 
         return ResponseEntity.ok(responseDTO);
     }
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
+
     @GetMapping("/queries/usuarios-por-rol")
-    public ResponseEntity<List<Object[]>> usuariosPorRol() {
-        return ResponseEntity.ok(uS.usuariosPorRol());
+    public ResponseEntity<List<RolMasUtilizadoDTO>> usuariosPorRol() {
+        List<RolMasUtilizadoDTO> lista = uS.usuariosPorRol()
+                .stream()
+                .map(item -> {
+                    RolMasUtilizadoDTO dto = new RolMasUtilizadoDTO();
+                    dto.setNombreRol((String) item[0]);
+                    dto.setCantidadUsuarios(((Number) item[1]).intValue());
+                    return dto;
+                })
+                .toList();
+
+        return ResponseEntity.ok(lista);
     }
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
+
     @GetMapping("/usuarios-por-estado")
-    public ResponseEntity<List<Object[]>> usuariosPorEstado() {
-        return ResponseEntity.ok(uS.usuariosPorEstado());
+    public ResponseEntity<List<UsuarioPorEstadoDTO>> usuariosPorEstado() {
+        List<UsuarioPorEstadoDTO> lista = uS.usuariosPorEstado()
+                .stream()
+                .map(item -> {
+                    UsuarioPorEstadoDTO dto = new UsuarioPorEstadoDTO();
+                    dto.setEstado((String) item[0]);
+                    dto.setCantidadUsuarios(((Number) item[1]).intValue());
+                    return dto;
+                })
+                .toList();
+
+        return ResponseEntity.ok(lista);
     }
 
 }

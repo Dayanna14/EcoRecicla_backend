@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.RecompensaInsertDTO;
 import upc.edu.pe.ecorecicla_backend.dtos.RecompensaListDTO;
+import upc.edu.pe.ecorecicla_backend.dtos.RecompensaMasCanjeadaDTO;
 import upc.edu.pe.ecorecicla_backend.entities.*;
 import upc.edu.pe.ecorecicla_backend.exceptions.ResourceNotFoundException;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.ITipoRecompensaService;
@@ -141,7 +142,17 @@ public class RecompensaController {
     }
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/tipo-recompensa-mas-canjeado")
-    public ResponseEntity<List<Object[]>> tipoRecompensaMasCanjeado() {
-        return ResponseEntity.ok(rS.tipoRecompensaMasCanjeado());
+    public ResponseEntity<List<RecompensaMasCanjeadaDTO>> tipoRecompensaMasCanjeado() {
+        List<RecompensaMasCanjeadaDTO> lista = rS.tipoRecompensaMasCanjeado()
+                .stream()
+                .map(item -> {
+                    RecompensaMasCanjeadaDTO dto = new RecompensaMasCanjeadaDTO();
+                    dto.setNombreRecompensa((String) item[0]);
+                    dto.setTotalCanjes(((Number) item[1]).intValue());
+                    return dto;
+                })
+                .toList();
+
+        return ResponseEntity.ok(lista);
     }
 }

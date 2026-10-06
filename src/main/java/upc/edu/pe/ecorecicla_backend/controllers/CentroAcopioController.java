@@ -10,7 +10,10 @@ import upc.edu.pe.ecorecicla_backend.dtos.CentroAcopioDTOInsert;
 import upc.edu.pe.ecorecicla_backend.dtos.CentroAcopioDTOList;
 import upc.edu.pe.ecorecicla_backend.dtos.CentroAcopioPuntosDTO;
 import upc.edu.pe.ecorecicla_backend.entities.CentroAcopio;
+import upc.edu.pe.ecorecicla_backend.entities.Usuarios;
+import upc.edu.pe.ecorecicla_backend.exceptions.ResourceNotFoundException;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.ICentroAcopioService;
+import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IUsuarioService;
 
 import java.net.URI;
 import java.util.List;
@@ -20,12 +23,14 @@ import java.util.List;
 public class CentroAcopioController {
     private final ModelMapper modelMapper;
     private final ICentroAcopioService cS;
+    private final IUsuarioService uS;
 
     public CentroAcopioController(
             ModelMapper modelMapper,
-            ICentroAcopioService cS) {
+            ICentroAcopioService cS, IUsuarioService uS) {
         this.modelMapper = modelMapper;
         this.cS = cS;
+        this.uS = uS;
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
@@ -45,13 +50,20 @@ public class CentroAcopioController {
     public ResponseEntity<CentroAcopioDTOInsert> registrar(
             @Valid @RequestBody CentroAcopioDTOInsert dto) {
 
+        Usuarios usuario = uS.listId(dto.getIdUsuario())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("El usuario no existe."));
+
         CentroAcopio centro =
                 modelMapper.map(dto, CentroAcopio.class);
+
+        centro.setUsuario(usuario);
 
         cS.insert(centro);
 
         CentroAcopioDTOInsert responseDTO =
                 modelMapper.map(centro, CentroAcopioDTOInsert.class);
+        responseDTO.setIdUsuario(dto.getIdUsuario());
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -63,6 +75,7 @@ public class CentroAcopioController {
                 .created(location)
                 .body(responseDTO);
     }
+
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/{id}")
@@ -92,13 +105,24 @@ public class CentroAcopioController {
     public ResponseEntity<CentroAcopioDTOInsert> actualizar(
             @Valid @RequestBody CentroAcopioDTOInsert dto) {
 
+        if (dto.getIdCentro() == null) {
+            throw new IllegalArgumentException("El idCentro no puede ser nulo para actualizar.");
+        }
+
+        Usuarios usuario = uS.listId(dto.getIdUsuario())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("El usuario no existe."));
+
         CentroAcopio centro =
                 modelMapper.map(dto, CentroAcopio.class);
+
+        centro.setUsuario(usuario);
 
         cS.update(centro);
 
         CentroAcopioDTOInsert responseDTO =
                 modelMapper.map(centro, CentroAcopioDTOInsert.class);
+        responseDTO.setIdUsuario(dto.getIdUsuario());
 
         return ResponseEntity.ok(responseDTO);
     }

@@ -26,7 +26,7 @@ public class RolController {
         this.modelMapper = modelMapper;
         this.rS = rS;
     }
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
+
     @GetMapping
     public ResponseEntity<List<RolDTOList>> listar() {
         List<RolDTOList> lista = rS.list()
@@ -36,7 +36,7 @@ public class RolController {
         return ResponseEntity.ok(lista);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+
     @PostMapping
     public ResponseEntity<RolDTOInsert> registrar(
             @Valid @RequestBody RolDTOInsert dto) {
@@ -58,7 +58,7 @@ public class RolController {
                 .created(location)
                 .body(responseDTO);
     }
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
+
     @GetMapping("/{id}")
     public ResponseEntity<RolDTOInsert> buscarPorId(
             @PathVariable Long id) {
@@ -70,14 +70,14 @@ public class RolController {
 
         return ResponseEntity.ok(dto);
     }
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         rS.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+
     @PutMapping
     public ResponseEntity<RolDTOInsert> actualizar(
             @Valid @RequestBody RolDTOInsert dto) {
@@ -91,7 +91,7 @@ public class RolController {
 
         return ResponseEntity.ok(responseDTO);
     }
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
+
     @GetMapping("/buscar")
     public ResponseEntity<List<RolDTOList>> buscarPorNombre(
             @RequestParam String nombre) {
@@ -103,7 +103,7 @@ public class RolController {
 
         return ResponseEntity.ok(lista);
     }
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
+    
     @GetMapping("/rol-mas-utilizado")
     public ResponseEntity<List<RolMasUtilizadoDTO>> rolMasUtilizado() {
 
