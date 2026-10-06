@@ -28,7 +28,7 @@ public class CentroAcopioController {
         this.cS = cS;
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping
     public ResponseEntity<List<CentroAcopioDTOList>> listar() {
 
@@ -40,7 +40,7 @@ public class CentroAcopioController {
         return ResponseEntity.ok(lista);
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<CentroAcopioDTOInsert> registrar(
             @Valid @RequestBody CentroAcopioDTOInsert dto) {
@@ -64,6 +64,7 @@ public class CentroAcopioController {
                 .body(responseDTO);
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/{id}")
     public ResponseEntity<CentroAcopioDTOInsert> buscarPorId(
             @PathVariable Long id) {
@@ -76,6 +77,7 @@ public class CentroAcopioController {
         return ResponseEntity.ok(dto);
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(
             @PathVariable Long id) {
@@ -85,7 +87,7 @@ public class CentroAcopioController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping
     public ResponseEntity<CentroAcopioDTOInsert> actualizar(
             @Valid @RequestBody CentroAcopioDTOInsert dto) {
@@ -101,6 +103,7 @@ public class CentroAcopioController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/buscar")
     public ResponseEntity<List<CentroAcopioDTOList>>
     buscarPorEstado(@RequestParam Boolean estado) {
@@ -116,6 +119,7 @@ public class CentroAcopioController {
         return ResponseEntity.ok(lista);
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/centros-mas-puntos")
     public ResponseEntity<List<CentroAcopioPuntosDTO>>
     centrosConMasPuntos() {

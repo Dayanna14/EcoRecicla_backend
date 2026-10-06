@@ -57,7 +57,7 @@ public class RecompensaController {
                 .body(responseDTO);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping
     public ResponseEntity<List<RecompensaListDTO>> listar() {
 
@@ -68,7 +68,7 @@ public class RecompensaController {
 
         return ResponseEntity.ok(lista);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/{id}")
     public ResponseEntity<RecompensaListDTO> listId(
             @PathVariable Long id) {
@@ -132,7 +132,7 @@ public class RecompensaController {
 
         return ResponseEntity.ok(responseDTO);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/tipo-recompensa-mas-canjeado")
     public ResponseEntity<List<Object[]>> tipoRecompensaMasCanjeado() {
         return ResponseEntity.ok(rS.tipoRecompensaMasCanjeado());

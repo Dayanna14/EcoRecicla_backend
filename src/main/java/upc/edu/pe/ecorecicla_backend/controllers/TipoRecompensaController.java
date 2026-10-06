@@ -28,7 +28,7 @@ public class TipoRecompensaController {
         this.tS = tS;
         this.modelMapper = modelMapper;
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping
     public ResponseEntity<List<TipoRecompensaDTOList>> list() {
         List<TipoRecompensaDTOList> listDTO = tS.list().stream()
@@ -37,7 +37,7 @@ public class TipoRecompensaController {
 
         return ResponseEntity.ok(listDTO);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/{id}")
     public ResponseEntity<TipoRecompensaDTOList> listId(@PathVariable Long id) {
         TipoRecompensa tipo = tS.listId(id);
@@ -64,6 +64,7 @@ public class TipoRecompensaController {
         return ResponseEntity.created(location).body(responseDTO);
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping("/{id}")
     public ResponseEntity<TipoRecompensaDTOList> update(@PathVariable Long id, @Valid @RequestBody TipoRecompensaDTOInsert dto) {
         TipoRecompensa existente = tS.listId(id);
@@ -77,6 +78,7 @@ public class TipoRecompensaController {
         return ResponseEntity.ok(modelMapper.map(tipo, TipoRecompensaDTOList.class));
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         TipoRecompensa existente = tS.listId(id);
@@ -86,7 +88,7 @@ public class TipoRecompensaController {
         tS.delete(id);
         return ResponseEntity.ok("Tipo de recompensa eliminado correctamente");
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/buscar")
     public ResponseEntity<List<TipoRecompensaDTOList>> buscarPorNombre(@RequestParam String nombre) {
         List<TipoRecompensaDTOList> resultado = tS.buscarPorNombre(nombre).stream()
@@ -95,7 +97,7 @@ public class TipoRecompensaController {
 
         return ResponseEntity.ok(resultado);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/recompensas/estado")
     public ResponseEntity<List<Map<String, Object>>> buscarRecompensaPorEstado(@RequestParam Boolean estado) {
         List<Object[]> resultado = tS.buscarRecompensaPorEstado(estado);
@@ -115,7 +117,7 @@ public class TipoRecompensaController {
 
         return ResponseEntity.ok(respuesta);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/ranking")
     public ResponseEntity<List<Map<String, Object>>> tipoRecompensaMasUsado() {
         List<Object[]> resultado = tS.tipoRecompensaMasUsado();

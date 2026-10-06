@@ -26,7 +26,7 @@ public class MaterialController {
         this.mS = mS;
         this.modelMapper = modelMapper;
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping
     public ResponseEntity<List<MaterialDTOList>> list() {
         List<MaterialDTOList> listDTO = mS.list().stream()
@@ -35,7 +35,7 @@ public class MaterialController {
 
         return ResponseEntity.ok(listDTO);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/{id}")
     public ResponseEntity<MaterialDTOList> listId(@PathVariable Long id) {
         Material material = mS.listId(id);
@@ -83,7 +83,7 @@ public class MaterialController {
         mS.delete(id);
         return ResponseEntity.noContent().build();
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/buscar")
     public ResponseEntity<List<MaterialDTOList>> buscarPorNombre(@RequestParam String nombre) {
         List<MaterialDTOList> resultado = mS.buscarPorNombre(nombre).stream()
@@ -92,7 +92,7 @@ public class MaterialController {
 
         return ResponseEntity.ok(resultado);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/ranking")
     public ResponseEntity<List<Object[]>> materialMasReciclado() {
         return ResponseEntity.ok(mS.materialMasReciclado());

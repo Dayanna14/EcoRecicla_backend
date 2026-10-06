@@ -48,7 +48,7 @@ public class EntregaController {
         return ResponseEntity.ok(listDTO);// HTTP 200 OK
     }
 
-    @PreAuthorize("hasRole('RECICLADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
     @PostMapping
     public ResponseEntity<EntregaDTOInsert> insert(@Valid @RequestBody EntregaDTOInsert dto) {
 
@@ -97,6 +97,7 @@ public class EntregaController {
         return ResponseEntity.noContent().build(); //HTTP 204
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
     @PutMapping
     public ResponseEntity<EntregaDTOInsert> update(@Valid @RequestBody EntregaDTOInsert dto) {
 
@@ -130,7 +131,7 @@ public class EntregaController {
 
         return ResponseEntity.ok(responseDTO);// HTTP 200 OK
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/{id}")
     public ResponseEntity<EntregaDTOList> listId(@PathVariable("id") Long id) {
 
@@ -144,7 +145,7 @@ public class EntregaController {
         // HTTP 200 OK
         return ResponseEntity.ok(dto);
     }
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/buscar/fecha")
     public ResponseEntity<List<EntregaPorFechaDTO>> buscarPorFecha(
             @RequestParam("fecha") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
@@ -165,7 +166,7 @@ public class EntregaController {
         return ResponseEntity.ok(lista);
     }
 
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/reportedetallado/UsuarioMaterial")
     public ResponseEntity<List<EntregaDetalladaUsuarioyMaterialDTO>> obtenerReporteDetallado(
             @RequestParam(value = "idUsuario", required = false) Long idUsuario,
@@ -188,7 +189,7 @@ public class EntregaController {
         return ResponseEntity.ok(lista);
         }
 
-
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/contar/masde100puntos")
     public ResponseEntity<Long> contarEntregas100Puntos() {
         Long total = eS.contarEntregas100PuntosGenerados();
