@@ -16,8 +16,10 @@ import upc.edu.pe.ecorecicla_backend.entities.Entrega;
 import upc.edu.pe.ecorecicla_backend.entities.Material;
 import upc.edu.pe.ecorecicla_backend.entities.Usuarios;
 import upc.edu.pe.ecorecicla_backend.exceptions.ResourceNotFoundException;
+import upc.edu.pe.ecorecicla_backend.serviceinterfaces.ICentroAcopioService;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IEntregaService;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IMaterialService;
+import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IUsuarioService;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -33,11 +35,15 @@ public class EntregaController {
     private final IEntregaService eS;
     private final ModelMapper modelMapper;
     private final IMaterialService mS;
+    private final ICentroAcopioService caS;
+    private final IUsuarioService uS;
 
-    public EntregaController(IEntregaService eS, ModelMapper modelMapper, IMaterialService mS) {
+    public EntregaController(IEntregaService eS, ModelMapper modelMapper, IMaterialService mS, ICentroAcopioService caS, IUsuarioService uS) {
         this.eS = eS;
         this.modelMapper = modelMapper;
         this.mS = mS;
+        this.caS = caS;
+        this.uS = uS;
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
@@ -50,7 +56,6 @@ public class EntregaController {
 
         return ResponseEntity.ok(listDTO);// HTTP 200 OK
     }
-
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
     @PostMapping
     public ResponseEntity<EntregaDTOInsert> insert(@Valid @RequestBody EntregaDTOInsert dto) {
@@ -62,7 +67,6 @@ public class EntregaController {
             entrega.setFecha(LocalDateTime.now());
         }
 
-
         Material material = mS.listId(dto.getIdMaterial());
         if (material == null) {
             throw new ResourceNotFoundException("El material no existe.");
@@ -71,17 +75,15 @@ public class EntregaController {
         entrega.setPuntosGeneredos(
                 (int) Math.round(dto.getCantidadKg() * material.getPuntosPorKg()));
 
-        CentroAcopio centroAcopio = new CentroAcopio();
-        centroAcopio.setIdCentro(dto.getIdCentroAcopio());
+        CentroAcopio centroAcopio = caS.searchId(dto.getIdCentroAcopio());
         entrega.setCentroAcopio(centroAcopio);
 
-        Usuarios usuario = new Usuarios();
-        usuario.setId_usuario(dto.getIdUsuario());
+        Usuarios usuario = uS.listId(dto.getIdUsuario())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("El usuario no existe."));
         entrega.setUsuario(usuario);
-        
 
         eS.insert(entrega);
-
 
         EntregaDTOInsert responseDTO = modelMapper.map(entrega, EntregaDTOInsert.class);
         responseDTO.setIdMaterial(dto.getIdMaterial());
@@ -112,32 +114,41 @@ public class EntregaController {
             throw new IllegalArgumentException("El idEntrega no puede ser nulo para actualizar.");
         }
 
+        eS.listId(dto.getIdEntrega()).orElseThrow(() ->
+                new ResourceNotFoundException("No se encontró la entrega con el id: " + dto.getIdEntrega()));
 
         Entrega entrega = modelMapper.map(dto, Entrega.class);
 
-        Material material = new Material();
-        material.setIdMaterial(dto.getIdMaterial());
-        entrega.setMaterial(material);
+        if (entrega.getFecha() == null) {
+            entrega.setFecha(LocalDateTime.now());
+        }
 
-        CentroAcopio centroAcopio = new CentroAcopio();
-        centroAcopio.setIdCentro(dto.getIdCentroAcopio());
+        Material material = mS.listId(dto.getIdMaterial());
+        if (material == null) {
+            throw new ResourceNotFoundException("El material no existe.");
+        }
+        entrega.setMaterial(material);
+        entrega.setPuntosGeneredos(
+                (int) Math.round(dto.getCantidadKg() * material.getPuntosPorKg()));
+
+        CentroAcopio centroAcopio = caS.searchId(dto.getIdCentroAcopio());
         entrega.setCentroAcopio(centroAcopio);
 
-        Usuarios usuario = new Usuarios();
-        usuario.setId_usuario(dto.getIdUsuario());
+        Usuarios usuario = uS.listId(dto.getIdUsuario())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("El usuario no existe."));
         entrega.setUsuario(usuario);
 
-
         eS.update(entrega);
-
 
         EntregaDTOInsert responseDTO = modelMapper.map(entrega, EntregaDTOInsert.class);
         responseDTO.setIdMaterial(dto.getIdMaterial());
         responseDTO.setIdCentroAcopio(dto.getIdCentroAcopio());
         responseDTO.setIdUsuario(dto.getIdUsuario());
 
-        return ResponseEntity.ok(responseDTO);// HTTP 200 OK
+        return ResponseEntity.ok(responseDTO);
     }
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/{id}")
     public ResponseEntity<EntregaDTOList> listId(@PathVariable("id") Long id) {

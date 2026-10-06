@@ -127,14 +127,22 @@ public class CanjeController {
     @PutMapping
     public ResponseEntity<CanjeDTOInsert> update(@Valid @RequestBody CanjeDTOInsert dto) {
         if (dto.getIdCanje() == null) {
-            cS.listId(dto.getIdCanje()).orElseThrow(() ->
-                    new ResourceNotFoundException("No se encontró el canje con el id: " + dto.getIdCanje()));
+            throw new IllegalArgumentException("El idCanje no puede ser nulo para actualizar.");
         }
+
+        Canje existente = cS.listId(dto.getIdCanje()).orElseThrow(() ->
+                new ResourceNotFoundException("No se encontró el canje con el id: " + dto.getIdCanje()));
 
         Canje canje = modelMapper.map(dto, Canje.class);
 
-        Recompensa recompensa = new Recompensa();
-        recompensa.setIdRecompensa(dto.getIdRecompensa());
+        // Si no enviaron fecha, se conserva la que ya tenía el canje
+        if (canje.getFecha() == null) {
+            canje.setFecha(existente.getFecha());
+        }
+
+        Recompensa recompensa = rS.listId(dto.getIdRecompensa())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("La recompensa no existe."));
         canje.setRecompensa(recompensa);
 
         Usuarios usuario = new Usuarios();
@@ -149,6 +157,7 @@ public class CanjeController {
 
         return ResponseEntity.ok(responseDTO);
     }
+
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
     @GetMapping("/buscar")
     public ResponseEntity<List<CanjeDTOList>> buscarPorEstado(@RequestParam String estado) {
