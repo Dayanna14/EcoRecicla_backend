@@ -9,6 +9,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.MaterialDTOInsert;
 import upc.edu.pe.ecorecicla_backend.dtos.MaterialDTOList;
 import upc.edu.pe.ecorecicla_backend.entities.Material;
+import upc.edu.pe.ecorecicla_backend.exceptions.ResourceNotFoundException;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IMaterialService;
 
 import java.net.URI;
@@ -40,7 +41,7 @@ public class MaterialController {
     public ResponseEntity<MaterialDTOList> listId(@PathVariable Long id) {
         Material material = mS.listId(id);
         if (material == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("El material no existe.");
         }
         MaterialDTOList dto = modelMapper.map(material, MaterialDTOList.class);
         return ResponseEntity.ok(dto);
@@ -68,6 +69,9 @@ public class MaterialController {
     @PutMapping("/{id}")
     public ResponseEntity<MaterialDTOInsert> update(@PathVariable Long id,
                                                     @Valid @RequestBody MaterialDTOInsert dto) {
+        if (mS.listId(id) == null) {
+            throw new ResourceNotFoundException("No existe un material con el id: " + id);
+        }
         Material material = modelMapper.map(dto, Material.class);
         material.setIdMaterial(id);
 
@@ -80,6 +84,9 @@ public class MaterialController {
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (mS.listId(id) == null) {
+            throw new ResourceNotFoundException("El material no existe.");
+        }
         mS.delete(id);
         return ResponseEntity.noContent().build();
     }

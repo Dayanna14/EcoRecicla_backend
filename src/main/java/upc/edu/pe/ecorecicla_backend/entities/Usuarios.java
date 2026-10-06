@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table( name = "Usuarios",
+@Table(name = "Usuarios",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "email")
+                @UniqueConstraint(columnNames = "email"),
+                @UniqueConstraint(columnNames = "nombre")
         })
 public class Usuarios implements Serializable {
     @Id
