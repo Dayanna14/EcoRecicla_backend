@@ -36,6 +36,9 @@ public class RecompensaController {
             @Valid @RequestBody RecompensaInsertDTO dto) {
 
         TipoRecompensa tipo = tS.listId(dto.getIdTipoRecompensa());
+        if (tipo == null) {
+            throw new ResourceNotFoundException("El tipo de recompensa no existe.");
+        }
 
         Recompensa recom = modelMapper.map(dto, Recompensa.class);
 
@@ -117,9 +120,13 @@ public class RecompensaController {
         }
 
         TipoRecompensa tipo = tS.listId(dto.getIdTipoRecompensa());
+        if (tipo == null) {
+            throw new ResourceNotFoundException("El tipo de recompensa no existe.");
+        }
 
         Recompensa recom = existente.get();
 
+        recom.setTipoRecompensa(tipo);
         recom.setNombre(dto.getNombre());
         recom.setCostoPuntos(dto.getCostoPuntos());
         recom.setEstado(dto.isEstado());
