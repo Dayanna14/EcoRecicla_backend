@@ -70,7 +70,7 @@ public class TipoRecompensaController {
     public ResponseEntity<TipoRecompensaDTOList> update(@PathVariable Long id, @Valid @RequestBody TipoRecompensaDTOInsert dto) {
         TipoRecompensa existente = tS.listId(id);
         if (existente == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("El tipo de recompensa no existe.");
         }
         TipoRecompensa tipo = modelMapper.map(dto, TipoRecompensa.class);
         tipo.setIdTipoRecompensa(id);
@@ -84,7 +84,7 @@ public class TipoRecompensaController {
     public ResponseEntity<String> delete(@PathVariable Long id) {
         TipoRecompensa existente = tS.listId(id);
         if (existente == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("El tipo de recompensa no existe.");
         }
         tS.delete(id);
         return ResponseEntity.ok("Tipo de recompensa eliminado correctamente");

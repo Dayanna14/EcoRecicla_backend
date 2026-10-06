@@ -17,6 +17,7 @@ import upc.edu.pe.ecorecicla_backend.entities.Material;
 import upc.edu.pe.ecorecicla_backend.entities.Usuarios;
 import upc.edu.pe.ecorecicla_backend.exceptions.ResourceNotFoundException;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IEntregaService;
+import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IMaterialService;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -31,10 +32,12 @@ public class EntregaController {
 
     private final IEntregaService eS;
     private final ModelMapper modelMapper;
+    private final IMaterialService mS;
 
-    public EntregaController(IEntregaService eS, ModelMapper modelMapper) {
+    public EntregaController(IEntregaService eS, ModelMapper modelMapper, IMaterialService mS) {
         this.eS = eS;
         this.modelMapper = modelMapper;
+        this.mS = mS;
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
@@ -60,9 +63,13 @@ public class EntregaController {
         }
 
 
-        Material material = new Material();
-        material.setIdMaterial(dto.getIdMaterial());
+        Material material = mS.listId(dto.getIdMaterial());
+        if (material == null) {
+            throw new ResourceNotFoundException("El material no existe.");
+        }
         entrega.setMaterial(material);
+        entrega.setPuntosGeneredos(
+                (int) Math.round(dto.getCantidadKg() * material.getPuntosPorKg()));
 
         CentroAcopio centroAcopio = new CentroAcopio();
         centroAcopio.setIdCentro(dto.getIdCentroAcopio());
