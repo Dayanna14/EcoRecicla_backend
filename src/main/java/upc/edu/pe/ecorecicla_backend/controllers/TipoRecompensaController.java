@@ -107,7 +107,7 @@ public class TipoRecompensaController {
                 .map(fila -> {
                     Map<String, Object> item = new HashMap<>();
                     item.put("idRecompensa", fila[0]);
-                    item.put("idTipo", fila[1]);
+                    item.put("tipoRecompensa", fila[1]);
                     item.put("nombre", fila[2]);
                     item.put("costoPuntos", fila[3]);
                     item.put("estado", fila[4]);

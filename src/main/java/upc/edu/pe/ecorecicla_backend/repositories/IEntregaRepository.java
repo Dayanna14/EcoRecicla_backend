@@ -23,8 +23,9 @@ public interface IEntregaRepository extends JpaRepository<Entrega, Long> {
             "FROM entregas e " +
             "INNER JOIN usuarios u ON e.id_usuario = u.id_usuario " +
             "INNER JOIN materiales m ON e.id_material = m.id_material " +
-            "WHERE (:idUsuario IS NULL OR e.id_usuario = :idUsuario) " +
-            "  AND (:idMaterial IS NULL OR e.id_material = :idMaterial)", nativeQuery = true)
+            "WHERE (CAST(:idUsuario AS BIGINT) IS NULL OR e.id_usuario = :idUsuario) " +
+            "  AND (CAST(:idMaterial AS BIGINT) IS NULL OR e.id_material = :idMaterial) " +
+            "ORDER BY e.fecha DESC", nativeQuery = true)
     public List<Object[]> obtenerReporteDetallado(
             @Param("idUsuario") Long idUsuario,
             @Param("idMaterial") Long idMaterial

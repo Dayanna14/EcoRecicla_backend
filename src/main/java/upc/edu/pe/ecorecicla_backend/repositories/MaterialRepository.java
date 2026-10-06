@@ -14,9 +14,13 @@ public interface MaterialRepository extends JpaRepository<Material, Long>{
     @Query(value = """
         SELECT *
         FROM materiales m
-        WHERE m.nombre LIKE CONCAT('%', :nombre, '%')
+        WHERE LOWER(m.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))
+        ORDER BY m.nombre
         """, nativeQuery = true)
     List<Material> buscarPorNombre(@Param("nombre") String nombre);
+
+
+
     @Query(value = """
         SELECT m.nombre,
                SUM(e.cantidad_kg) AS total_kg_reciclados,
