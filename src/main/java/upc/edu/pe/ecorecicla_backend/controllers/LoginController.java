@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import upc.edu.pe.ecorecicla_backend.dtos.LoginRequestDTO;
 import upc.edu.pe.ecorecicla_backend.dtos.LoginResponseDTO;
 import upc.edu.pe.ecorecicla_backend.securities.JwtTokenService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/login")
@@ -45,11 +48,17 @@ public class LoginController {
 
         String token =
                 jwtTokenService.generateToken(userDetails);
+        // Obtener TODOS los roles del usuario
+        List<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
 
         return ResponseEntity.ok(
                 new LoginResponseDTO(
                         token,
-                        userDetails.getUsername()
+                        userDetails.getUsername(),
+                        roles
                 )
         );
     }
