@@ -13,4 +13,7 @@ public interface IUsuarioService {
     public Optional<Usuarios> listId(Long id);
     List<Object[]> usuariosPorRol();
     List<Object[]> usuariosPorEstado();
+    Optional<Usuarios> buscarPorEmail(String email);
+    boolean existeNombre(String nombre);
+    boolean existeEmail(String email);
 }

@@ -57,4 +57,9 @@ public class CanjeServiceImplement implements ICanjeService {
     public List<Object[]> canjesPorUsuario() {
         return cR.canjesPorUsuario();
     }
+
+    @Override
+    public List<Canje> listarPorUsuario(Long idUsuario) {
+        return cR.listarPorUsuario(idUsuario);
+    }
 }

@@ -29,7 +29,19 @@ public class Usuarios implements Serializable {
     private Boolean enabled=true;
 
 
+    // Opción B: el admin restablece la contraseña y el usuario debe cambiarla al ingresar
+    @Column(name = "debe_cambiar_contrasenia")
+    private Boolean debeCambiarContrasenia = false;
+
     public Usuarios() {
+    }
+
+    public Boolean getDebeCambiarContrasenia() {
+        return debeCambiarContrasenia;
+    }
+
+    public void setDebeCambiarContrasenia(Boolean debeCambiarContrasenia) {
+        this.debeCambiarContrasenia = debeCambiarContrasenia;
     }
 
     public Boolean getEnabled() {

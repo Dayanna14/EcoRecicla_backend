@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import upc.edu.pe.ecorecicla_backend.dtos.LoginRequestDTO;
 import upc.edu.pe.ecorecicla_backend.dtos.LoginResponseDTO;
+import upc.edu.pe.ecorecicla_backend.entities.Usuarios;
 import upc.edu.pe.ecorecicla_backend.securities.JwtTokenService;
+import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IUsuarioService;
 
 import java.util.List;
 
@@ -23,12 +25,16 @@ public class LoginController {
 
     private final JwtTokenService jwtTokenService;
 
+    private final IUsuarioService uS;
+
     public LoginController(
             AuthenticationManager authenticationManager,
-            JwtTokenService jwtTokenService) {
+            JwtTokenService jwtTokenService,
+            IUsuarioService uS) {
 
         this.authenticationManager = authenticationManager;
         this.jwtTokenService = jwtTokenService;
+        this.uS = uS;
     }
 
     @PostMapping
@@ -54,11 +60,17 @@ public class LoginController {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
+        // Datos del usuario (el username del token es su email)
+        Usuarios usuario = uS.buscarPorEmail(userDetails.getUsername()).orElse(null);
+
         return ResponseEntity.ok(
                 new LoginResponseDTO(
                         token,
                         userDetails.getUsername(),
-                        roles
+                        roles,
+                        usuario != null ? usuario.getId_usuario() : null,
+                        usuario != null ? usuario.getNombre() : null,
+                        usuario != null && Boolean.TRUE.equals(usuario.getDebeCambiarContrasenia())
                 )
         );
     }

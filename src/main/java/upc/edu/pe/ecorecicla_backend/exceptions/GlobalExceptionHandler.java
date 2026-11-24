@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.DisabledException;
 
 @RestControllerAdvice
 // este si puede ser modificable con diferentes errores
@@ -70,7 +71,24 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
-    // 401: login con usuario o contraseña incorrectos, o usuario deshabilitado
+    // 403: el usuario existe pero su cuenta está inhabilitada
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<ErrorResponse> handleDisabled(
+            DisabledException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                "Tu cuenta está desactivada. Acércate a un centro de acopio.",
+                request.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(error);
+    }
+
+    // 401: login con usuario o contraseña incorrectos
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleAuthentication(
             AuthenticationException ex,

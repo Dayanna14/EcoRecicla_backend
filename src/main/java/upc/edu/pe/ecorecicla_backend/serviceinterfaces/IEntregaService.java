@@ -20,4 +20,5 @@ public interface IEntregaService {
     public List<Object[]> buscarPorFecha(LocalDate fecha);
     public List<Object[]> obtenerReporteDetallado(Long idUsuario, Long idMaterial);
     public Long contarEntregas100PuntosGenerados();
+    public List<Entrega> listarPorUsuario(Long idUsuario);
 }

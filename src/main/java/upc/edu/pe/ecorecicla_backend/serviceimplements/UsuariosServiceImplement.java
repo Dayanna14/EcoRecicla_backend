@@ -51,4 +51,20 @@ public class UsuariosServiceImplement implements IUsuarioService {
     public List<Object[]> usuariosPorEstado() {
         return uR.usuariosPorEstado();
     }
+
+    @Override
+    public Optional<Usuarios> buscarPorEmail(String email) {
+        return uR.findByEmailIgnoreCase(email);
+    }
+
+    @Override
+    public boolean existeNombre(String nombre) {
+        // (existsBy no sirve aquí: el id de Usuarios se llama id_usuario, no id)
+        return uR.findByNombreIgnoreCase(nombre).isPresent();
+    }
+
+    @Override
+    public boolean existeEmail(String email) {
+        return uR.findByEmailIgnoreCase(email).isPresent();
+    }
 }

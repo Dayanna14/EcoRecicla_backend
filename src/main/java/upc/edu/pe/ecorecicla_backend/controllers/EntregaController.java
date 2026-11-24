@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.EntregaDTOInsert;
@@ -216,4 +217,18 @@ public class EntregaController {
 
 
 
+
+    // Entregas del usuario que inició sesión (se identifica con el token, no con un parámetro)
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
+    @GetMapping("/mis-entregas")
+    public ResponseEntity<List<EntregaDTOList>> misEntregas(Authentication authentication) {
+        Usuarios usuario = uS.buscarPorEmail(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el usuario de la sesión."));
+
+        List<EntregaDTOList> listDTO = eS.listarPorUsuario(usuario.getId_usuario()).stream()
+                .map(entrega -> modelMapper.map(entrega, EntregaDTOList.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(listDTO);
+    }
 }

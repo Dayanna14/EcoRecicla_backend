@@ -3,7 +3,9 @@ package upc.edu.pe.ecorecicla_backend.controllers;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.CanjeDTOInsert;
@@ -16,6 +18,7 @@ import upc.edu.pe.ecorecicla_backend.exceptions.ResourceNotFoundException;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.ICanjeService;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IEntregaService;
 import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IRecompensaService;
+import upc.edu.pe.ecorecicla_backend.serviceinterfaces.IUsuarioService;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -29,12 +32,14 @@ public class CanjeController {
     private final ModelMapper modelMapper;
     private final IRecompensaService rS;
     private final IEntregaService eS;
+    private final IUsuarioService uS;
 
-    public CanjeController(ICanjeService cS, ModelMapper modelMapper, IRecompensaService rS, IEntregaService eS) {
+    public CanjeController(ICanjeService cS, ModelMapper modelMapper, IRecompensaService rS, IEntregaService eS, IUsuarioService uS) {
         this.cS = cS;
         this.modelMapper = modelMapper;
         this.rS = rS;
         this.eS = eS;
+        this.uS = uS;
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
@@ -48,7 +53,13 @@ public class CanjeController {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','RECICLADOR')")
     @PostMapping
-    public ResponseEntity<CanjeDTOInsert> insert(@Valid @RequestBody CanjeDTOInsert dto) {
+    public ResponseEntity<CanjeDTOInsert> insert(@Valid @RequestBody CanjeDTOInsert dto, Authentication authentication) {
+        // El reciclador solo puede canjear para sí mismo y su canje siempre empieza PENDIENTE
+        if (esSoloReciclador(authentication)) {
+            dto.setIdUsuario(usuarioActual(authentication).getId_usuario());
+            dto.setEstado("PENDIENTE");
+        }
+
         Canje canje = modelMapper.map(dto, Canje.class);
 
         if (canje.getFecha() == null) {
@@ -71,9 +82,11 @@ public class CanjeController {
                 .sum();
 
         // Puntos que ya gastó en canjes anteriores
+        // (los canjes CANCELADOS devuelven sus puntos, por eso no se cuentan)
         int puntosGastados = cS.list().stream()
                 .filter(c -> c.getUsuario() != null
-                        && c.getUsuario().getId_usuario().equals(dto.getIdUsuario()))
+                        && c.getUsuario().getId_usuario().equals(dto.getIdUsuario())
+                        && !"CANCELADO".equalsIgnoreCase(c.getEstado()))
                 .mapToInt(c -> c.getPuntosUsados())
                 .sum();
 
@@ -179,5 +192,65 @@ public class CanjeController {
                 })
                 .toList();
         return ResponseEntity.ok(lista);
+    }
+
+    // Canjes del usuario que inició sesión
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO','RECICLADOR')")
+    @GetMapping("/mis-canjes")
+    public ResponseEntity<List<CanjeDTOList>> misCanjes(Authentication authentication) {
+        List<CanjeDTOList> lista = cS.listarPorUsuario(usuarioActual(authentication).getId_usuario())
+                .stream()
+                .map(canje -> modelMapper.map(canje, CanjeDTOList.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    // El reciclador cancela SU canje pendiente (recupera los puntos); el admin puede cancelar cualquiera
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','RECICLADOR')")
+    @PutMapping("/{id}/cancelar")
+    public ResponseEntity<CanjeDTOList> cancelar(@PathVariable("id") Long id, Authentication authentication) {
+        Canje canje = cS.listId(id).orElseThrow(() ->
+                new ResourceNotFoundException("No se encontró el canje con el id: " + id));
+
+        if (esSoloReciclador(authentication)
+                && !canje.getUsuario().getId_usuario().equals(usuarioActual(authentication).getId_usuario())) {
+            throw new AccessDeniedException("No puedes cancelar un canje que no es tuyo.");
+        }
+        if (!"PENDIENTE".equalsIgnoreCase(canje.getEstado())) {
+            throw new IllegalArgumentException("Solo se pueden cancelar canjes pendientes.");
+        }
+
+        canje.setEstado("CANCELADO");
+        cS.update(canje);
+        return ResponseEntity.ok(modelMapper.map(canje, CanjeDTOList.class));
+    }
+
+    // El operador (o el admin) entrega la recompensa en el centro y marca el canje como completado
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
+    @PutMapping("/{id}/completar")
+    public ResponseEntity<CanjeDTOList> completar(@PathVariable("id") Long id) {
+        Canje canje = cS.listId(id).orElseThrow(() ->
+                new ResourceNotFoundException("No se encontró el canje con el id: " + id));
+
+        if (!"PENDIENTE".equalsIgnoreCase(canje.getEstado())) {
+            throw new IllegalArgumentException("Solo se pueden completar canjes pendientes.");
+        }
+
+        canje.setEstado("COMPLETADO");
+        cS.update(canje);
+        return ResponseEntity.ok(modelMapper.map(canje, CanjeDTOList.class));
+    }
+
+    private Usuarios usuarioActual(Authentication authentication) {
+        return uS.buscarPorEmail(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el usuario de la sesión."));
+    }
+
+    private boolean esSoloReciclador(Authentication authentication) {
+        boolean reciclador = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_RECICLADOR"));
+        boolean admin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMINISTRADOR"));
+        return reciclador && !admin;
     }
 }

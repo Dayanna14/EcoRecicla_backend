@@ -12,6 +12,10 @@ import java.util.Optional;
 public interface IUsuarioRepository extends JpaRepository<Usuarios, Long> {
 
     Optional<Usuarios> findByNombreIgnoreCase(String nombre);
+
+    // El token guarda el email del usuario: con esto sabemos quién hace la petición
+    Optional<Usuarios> findByEmailIgnoreCase(String email);
+
     @Query(value = """
     SELECT
         CASE
