@@ -44,6 +44,10 @@ public class UsuariosController {
     public ResponseEntity<UsuarioListDTO> registrar(
             @Valid @RequestBody UsuarioInsertDTO dto) {
 
+        if (dto.getContrasenia() == null || dto.getContrasenia().isBlank()) {
+            throw new IllegalArgumentException("La contraseña es obligatoria.");
+        }
+
         Rol rol = rS.searchId(dto.getIdRol());
 
         Usuarios usuario = modelMapper.map(dto, Usuarios.class);
@@ -133,7 +137,10 @@ public class UsuariosController {
 
         usuario.setNombre(dto.getNombre());
         usuario.setEmail(dto.getEmail());
-        usuario.setContrasenia(passwordEncoder.encode(dto.getContrasenia()));
+        // Si el admin no escribe una nueva contraseña, se conserva la actual
+        if (dto.getContrasenia() != null && !dto.getContrasenia().isBlank()) {
+            usuario.setContrasenia(passwordEncoder.encode(dto.getContrasenia()));
+        }
         usuario.setRol(rol);
 
         uS.update(usuario);
@@ -197,6 +204,23 @@ public class UsuariosController {
         dto.setContraseniaTemporal(temporal);
 
         return ResponseEntity.ok(dto);
+    }
+
+    // Habilitar o inhabilitar una cuenta (una cuenta inhabilitada no puede iniciar sesión)
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<UsuarioListDTO> cambiarEstado(
+            @PathVariable Long id) {
+
+        Usuarios usuario = uS.listId(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "El usuario no existe."
+                        ));
+
+        usuario.setEnabled(!Boolean.TRUE.equals(usuario.getEnabled()));
+        uS.update(usuario);
+
+        return ResponseEntity.ok(modelMapper.map(usuario, UsuarioListDTO.class));
     }
 
 }

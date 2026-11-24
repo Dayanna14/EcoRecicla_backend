@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import upc.edu.pe.ecorecicla_backend.dtos.CentroAcopioDTOInsert;
@@ -167,6 +168,19 @@ public class CentroAcopioController {
         return ResponseEntity.ok(lista);
     }
 
+
+    // Centros a cargo del operador que inició sesión (se identifica con el token)
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
+    @GetMapping("/mi-centro")
+    public ResponseEntity<List<CentroAcopioDTOList>> miCentro(Authentication authentication) {
+        Usuarios operador = uS.buscarPorEmail(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el usuario de la sesión."));
+
+        List<CentroAcopioDTOList> lista = cS.listarPorOperador(operador.getId_usuario())
+                .stream()
+                .map(c -> modelMapper.map(c, CentroAcopioDTOList.class))
+                .toList();
+
+        return ResponseEntity.ok(lista);
+    }
 }
-
-

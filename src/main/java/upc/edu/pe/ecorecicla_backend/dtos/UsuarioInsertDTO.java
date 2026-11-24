@@ -18,7 +18,7 @@ public class UsuarioInsertDTO {
     @NotBlank(message = "El email es obligatorio")
     private String email;
 
-    @NotBlank(message = "La contraseña es obligatoria")
+    // Obligatoria al registrar (se valida en el POST); al editar puede ir vacía y se conserva la actual
     private String contrasenia;
 
     public UsuarioInsertDTO() {

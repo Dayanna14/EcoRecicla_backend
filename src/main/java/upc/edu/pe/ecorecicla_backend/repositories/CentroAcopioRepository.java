@@ -20,4 +20,8 @@ public interface CentroAcopioRepository extends JpaRepository<CentroAcopio, Long
         ORDER BY total_puntos DESC
         """, nativeQuery = true)
     List<Object[]> centrosConMasPuntos();
+
+    // Centros a cargo de un operador
+    @Query("SELECT c FROM CentroAcopio c WHERE c.usuario.id_usuario = :idUsuario")
+    List<CentroAcopio> listarPorOperador(@org.springframework.data.repository.query.Param("idUsuario") Long idUsuario);
 }

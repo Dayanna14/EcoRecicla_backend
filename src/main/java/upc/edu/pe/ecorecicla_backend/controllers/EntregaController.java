@@ -59,9 +59,25 @@ public class EntregaController {
     }
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
     @PostMapping
-    public ResponseEntity<EntregaDTOInsert> insert(@Valid @RequestBody EntregaDTOInsert dto) {
+    public ResponseEntity<EntregaDTOInsert> insert(@Valid @RequestBody EntregaDTOInsert dto, Authentication authentication) {
+
+        // Quién registra la entrega (operador o admin): se guarda como el que la recibió
+        Usuarios receptor = uS.buscarPorEmail(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el usuario de la sesión."));
+
+        // El operador solo registra entregas en un centro a su cargo
+        boolean esAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMINISTRADOR"));
+        if (!esAdmin) {
+            boolean esSuCentro = caS.listarPorOperador(receptor.getId_usuario()).stream()
+                    .anyMatch(c -> c.getIdCentro().equals(dto.getIdCentroAcopio()));
+            if (!esSuCentro) {
+                throw new IllegalArgumentException("Solo puedes registrar entregas en el centro de acopio a tu cargo.");
+            }
+        }
 
         Entrega entrega = modelMapper.map(dto, Entrega.class);
+        entrega.setIdOperador(receptor.getId_usuario());
 
         // Si no enviaron fecha en el JSON, asignamos la actual
         if (entrega.getFecha() == null) {
@@ -115,10 +131,12 @@ public class EntregaController {
             throw new IllegalArgumentException("El idEntrega no puede ser nulo para actualizar.");
         }
 
-        eS.listId(dto.getIdEntrega()).orElseThrow(() ->
+        Entrega existente = eS.listId(dto.getIdEntrega()).orElseThrow(() ->
                 new ResourceNotFoundException("No se encontró la entrega con el id: " + dto.getIdEntrega()));
 
         Entrega entrega = modelMapper.map(dto, Entrega.class);
+        // Al corregir una entrega se conserva quién la recibió
+        entrega.setIdOperador(existente.getIdOperador());
 
         if (entrega.getFecha() == null) {
             entrega.setFecha(LocalDateTime.now());
@@ -226,6 +244,20 @@ public class EntregaController {
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el usuario de la sesión."));
 
         List<EntregaDTOList> listDTO = eS.listarPorUsuario(usuario.getId_usuario()).stream()
+                .map(entrega -> modelMapper.map(entrega, EntregaDTOList.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(listDTO);
+    }
+
+    // Entregas recibidas en los centros a cargo del operador que inició sesión
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','OPERADOR_CENTRO')")
+    @GetMapping("/mi-centro")
+    public ResponseEntity<List<EntregaDTOList>> entregasDeMiCentro(Authentication authentication) {
+        Usuarios operador = uS.buscarPorEmail(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el usuario de la sesión."));
+
+        List<EntregaDTOList> listDTO = eS.listarPorCentrosDeOperador(operador.getId_usuario()).stream()
                 .map(entrega -> modelMapper.map(entrega, EntregaDTOList.class))
                 .collect(Collectors.toList());
 

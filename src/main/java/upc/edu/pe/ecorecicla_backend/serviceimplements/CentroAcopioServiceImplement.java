@@ -57,4 +57,9 @@ public class CentroAcopioServiceImplement implements ICentroAcopioService {
     public List<Object[]> centrosConMasPuntos() {
         return cR.centrosConMasPuntos();
     }
+
+    @Override
+    public List<CentroAcopio> listarPorOperador(Long idUsuario) {
+        return cR.listarPorOperador(idUsuario);
+    }
 }

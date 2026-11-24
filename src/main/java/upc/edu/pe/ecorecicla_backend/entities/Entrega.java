@@ -26,6 +26,11 @@ public class Entrega {
     @ManyToOne
     @JoinColumn(name = "id_centro")
     private CentroAcopio centroAcopio;
+
+    // Operador (o admin) que recibió la entrega. Columna simple con el id del usuario:
+    // no se usa @ManyToOne para que ModelMapper no confunda este usuario con el reciclador.
+    @Column(name = "id_operador")
+    private Long idOperador;
     
 
     public Entrega() {}
@@ -38,6 +43,14 @@ public class Entrega {
         this.material = material;
         this.centroAcopio = centroAcopio;
         this.usuario = usuario;
+    }
+
+    public Long getIdOperador() {
+        return idOperador;
+    }
+
+    public void setIdOperador(Long idOperador) {
+        this.idOperador = idOperador;
     }
 
     public Long getIdEntrega() {

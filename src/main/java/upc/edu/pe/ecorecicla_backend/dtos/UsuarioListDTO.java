@@ -5,6 +5,8 @@ public class UsuarioListDTO {
     private Long idRol;
     private String nombre;
     private String email;
+    // Habilitado / inhabilitado (para que el admin lo vea y lo cambie)
+    private Boolean enabled;
 
     public UsuarioListDTO() {
     }
@@ -41,4 +43,12 @@ public class UsuarioListDTO {
         this.email = email;
     }
 
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 }
