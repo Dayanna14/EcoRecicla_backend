@@ -12,6 +12,8 @@ public class EntregaDTOList {
     private Long materialIdMaterial;
     private Long centroAcopioIdCentroAcopio;
     private Long usuarioIdUsuario;
+    // Quién recibió la entrega (operador o admin)
+    private Long idOperador;
 
 
     public Long getIdEntrega() {
@@ -60,6 +62,14 @@ public class EntregaDTOList {
 
     public void setCentroAcopioIdCentroAcopio(Long centroAcopioIdCentroAcopio) {
         this.centroAcopioIdCentroAcopio = centroAcopioIdCentroAcopio;
+    }
+
+    public Long getIdOperador() {
+        return idOperador;
+    }
+
+    public void setIdOperador(Long idOperador) {
+        this.idOperador = idOperador;
     }
 
     public Long getUsuarioIdUsuario() {

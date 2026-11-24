@@ -37,4 +37,8 @@ public interface IEntregaRepository extends JpaRepository<Entrega, Long> {
     // Solo las entregas de un usuario (pantalla "Mis entregas" del reciclador)
     @Query("SELECT e FROM Entrega e WHERE e.usuario.id_usuario = :idUsuario ORDER BY e.fecha DESC")
     public List<Entrega> listarPorUsuario(@Param("idUsuario") Long idUsuario);
+
+    // Entregas recibidas en los centros a cargo de un operador
+    @Query("SELECT e FROM Entrega e WHERE e.centroAcopio.usuario.id_usuario = :idUsuario ORDER BY e.fecha DESC")
+    public List<Entrega> listarPorCentrosDeOperador(@Param("idUsuario") Long idUsuario);
 }

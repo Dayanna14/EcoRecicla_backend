@@ -116,4 +116,9 @@ public class EntregaServiceImplement implements IEntregaService {
         return eR.listarPorUsuario(idUsuario);
     }
 
+    @Override
+    public List<Entrega> listarPorCentrosDeOperador(Long idUsuario) {
+        return eR.listarPorCentrosDeOperador(idUsuario);
+    }
+
 }

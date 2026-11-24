@@ -21,4 +21,5 @@ public interface IEntregaService {
     public List<Object[]> obtenerReporteDetallado(Long idUsuario, Long idMaterial);
     public Long contarEntregas100PuntosGenerados();
     public List<Entrega> listarPorUsuario(Long idUsuario);
+    public List<Entrega> listarPorCentrosDeOperador(Long idUsuario);
 }
