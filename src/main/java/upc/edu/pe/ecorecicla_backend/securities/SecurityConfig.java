@@ -66,8 +66,11 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // Login público
-                        .requestMatchers("/login").permitAll()
+                        // Login y registro públicos
+                        .requestMatchers("/login", "/registro", "/error").permitAll()
+
+                        // Página de inicio: impacto, centros y recompensas (solo lectura, sin datos personales)
+                        .requestMatchers(HttpMethod.GET, "/api/publico/**").permitAll()
 
                         // Swagger
                         .requestMatchers(

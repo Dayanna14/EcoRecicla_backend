@@ -2,6 +2,7 @@ package upc.edu.pe.ecorecicla_backend.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import upc.edu.pe.ecorecicla_backend.entities.Canje;
 
@@ -21,4 +22,8 @@ public interface ICanjeRepository extends JpaRepository<Canje, Long> {
         ORDER BY cantidad_canjes DESC
         """, nativeQuery = true)
     List<Object[]> canjesPorUsuario();
+
+    // Solo los canjes de un usuario (pantalla "Mis canjes" del reciclador)
+    @Query("SELECT c FROM Canje c WHERE c.usuario.id_usuario = :idUsuario ORDER BY c.fecha DESC")
+    List<Canje> listarPorUsuario(@Param("idUsuario") Long idUsuario);
 }

@@ -6,11 +6,14 @@ import org.springframework.stereotype.Repository;
 import upc.edu.pe.ecorecicla_backend.entities.Rol;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 
 public interface RolRepository extends JpaRepository<Rol,Long> {
     List<Rol> findByNombreContainingIgnoreCase(String nombre);
+
+    Optional<Rol> findByNombre(String nombre);
 
     //Mostrar el rol más utilizado
     @Query(value = """

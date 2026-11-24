@@ -61,4 +61,11 @@ public class RolServiceImplement implements IRolService {
         return rR.rolMasUtilizado();
     }
 
+
+    @Override
+    public Rol buscarPorNombreExacto(String nombre) {
+        return rR.findByNombre(nombre).orElseThrow(() ->
+                new ResourceNotFoundException(
+                        "Rol no encontrado: " + nombre));
+    }
 }

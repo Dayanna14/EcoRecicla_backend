@@ -1,5 +1,8 @@
 package upc.edu.pe.ecorecicla_backend.controllers;
 
+import upc.edu.pe.ecorecicla_backend.dtos.ContraseniaTemporalDTO;
+import java.security.SecureRandom;
+
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -169,6 +172,31 @@ public class UsuariosController {
                 .toList();
 
         return ResponseEntity.ok(lista);
+    }
+
+    // Opción B de "olvidé mi contraseña": el admin genera una contraseña temporal,
+    // se la entrega al usuario y este debe cambiarla al ingresar
+    @PutMapping("/{id}/restablecer")
+    public ResponseEntity<ContraseniaTemporalDTO> restablecerContrasenia(
+            @PathVariable Long id) {
+
+        Usuarios usuario = uS.listId(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "El usuario no existe."
+                        ));
+
+        String temporal = "Eco-" + (1000 + new SecureRandom().nextInt(9000));
+
+        usuario.setContrasenia(passwordEncoder.encode(temporal));
+        usuario.setDebeCambiarContrasenia(true);
+        uS.update(usuario);
+
+        ContraseniaTemporalDTO dto = new ContraseniaTemporalDTO();
+        dto.setNombre(usuario.getNombre());
+        dto.setContraseniaTemporal(temporal);
+
+        return ResponseEntity.ok(dto);
     }
 
 }

@@ -111,4 +111,9 @@ public class EntregaServiceImplement implements IEntregaService {
         return eR.contarEntregas100PuntosGenerados();
     }
 
+    @Override
+    public List<Entrega> listarPorUsuario(Long idUsuario) {
+        return eR.listarPorUsuario(idUsuario);
+    }
+
 }

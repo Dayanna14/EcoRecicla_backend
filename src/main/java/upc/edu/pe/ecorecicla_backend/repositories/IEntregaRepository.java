@@ -33,4 +33,8 @@ public interface IEntregaRepository extends JpaRepository<Entrega, Long> {
 
     @Query(value = "SELECT COUNT(*) FROM entregas WHERE puntos_generedos > 100", nativeQuery = true)
     public Long contarEntregas100PuntosGenerados();
+
+    // Solo las entregas de un usuario (pantalla "Mis entregas" del reciclador)
+    @Query("SELECT e FROM Entrega e WHERE e.usuario.id_usuario = :idUsuario ORDER BY e.fecha DESC")
+    public List<Entrega> listarPorUsuario(@Param("idUsuario") Long idUsuario);
 }

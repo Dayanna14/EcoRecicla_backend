@@ -12,5 +12,6 @@ public interface IRolService {
     void update(Rol r);
     // querys
     List<Rol> buscarPorNombre(String nombre);
+    Rol buscarPorNombreExacto(String nombre);
     List<Object[]> rolMasUtilizado();
 }
